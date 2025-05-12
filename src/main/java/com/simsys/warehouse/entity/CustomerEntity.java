@@ -1,58 +1,65 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table(name = "customer")
+@Table(name = "customers")
 public class CustomerEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_id_gen")
-    @SequenceGenerator(name = "customer_id_gen", sequenceName = "customer_customerid_seq", allocationSize = 1)
-    @Column(name = "customerid", nullable = false)
-    private Integer id;
 
-    @Size(max = 255)
-    @Column(name = "name")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private UUID guid = UUID.randomUUID();
+
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "address", length = Integer.MAX_VALUE)
-    private String address;
-
-    @Size(max = 20)
-    @Column(name = "phone", length = 20)
     private String phone;
 
-    @Size(max = 255)
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "status")
-    private Boolean status;
+    private String address;
 
-    @Size(max = 20)
-    @Column(name = "bankcard", length = 20)
-    private String bankcard;
+    @Column(name = "bank_card")
+    private String bankCard;
 
-    @Column(name = "createddate")
-    private LocalDate createddate;
+    // OneToMany relationship
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<TransactionEntity> transactions;
 
-    @Column(name = "updateddate")
-    private LocalDate updateddate;
+    public CustomerEntity() {
+    }
 
-    @OneToMany(mappedBy = "customerid")
-    private Set<OrderEntity> orderEntities = new LinkedHashSet<>();
+    public CustomerEntity(String name, UUID guid, String phone, String email, String address, String bankCard) {
+        this.name = name;
+        this.guid = guid;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.bankCard = bankCard;
+    }
 
-    public Integer getId() {
+    // Getters and Setters
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public UUID getGuid() {
+        return guid;
+    }
+
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
     public String getName() {
@@ -61,14 +68,6 @@ public class CustomerEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getPhone() {
@@ -87,44 +86,27 @@ public class CustomerEntity {
         this.email = email;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public String getAddress() {
+        return address;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getBankcard() {
-        return bankcard;
+    public String getBankCard() {
+        return bankCard;
     }
 
-    public void setBankcard(String bankcard) {
-        this.bankcard = bankcard;
+    public void setBankCard(String bankCard) {
+        this.bankCard = bankCard;
     }
 
-    public LocalDate getCreateddate() {
-        return createddate;
+    public List<TransactionEntity> getTransactions() {
+        return transactions;
     }
 
-    public void setCreateddate(LocalDate createddate) {
-        this.createddate = createddate;
+    public void setTransactions(List<TransactionEntity> transactions) {
+        this.transactions = transactions;
     }
-
-    public LocalDate getUpdateddate() {
-        return updateddate;
-    }
-
-    public void setUpdateddate(LocalDate updateddate) {
-        this.updateddate = updateddate;
-    }
-
-    public Set<OrderEntity> getOrders() {
-        return orderEntities;
-    }
-
-    public void setOrders(Set<OrderEntity> orderEntities) {
-        this.orderEntities = orderEntities;
-    }
-
 }

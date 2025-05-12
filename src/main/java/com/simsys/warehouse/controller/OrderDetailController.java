@@ -1,46 +1,55 @@
 package com.simsys.warehouse.controller;
 
-import com.simsys.warehouse.dto.OrderDetailDTO;
+import com.simsys.warehouse.requestdto.OrderDetailRequestDto;
+import com.simsys.warehouse.responsedto.OrderDetailResponseDto;
 import com.simsys.warehouse.service.OrderDetailService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/order-details")
-@Tag(name = "OrderDetails")
+@Tag(name = "Order Details")
 public class OrderDetailController {
 
     @Autowired
     private OrderDetailService orderDetailService;
 
+    @PostMapping("/{orderGuid}")
+    public OrderDetailResponseDto createOrderDetail(
+            @RequestBody OrderDetailRequestDto dto
+    ) {
+        return orderDetailService.create(dto);
+    }
+
     @GetMapping
-    public List<OrderDetailDTO> getAllOrderDetails() {
-        return orderDetailService.findAll();
+    public List<OrderDetailResponseDto> getAllOrderDetails() {
+        return orderDetailService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderDetailDTO> getOrderDetailById(@PathVariable Integer id) {
-        OrderDetailDTO dto = orderDetailService.findById(id);
-        return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.notFound().build();
+    @GetMapping("/{guid}")
+    public OrderDetailResponseDto getOrderDetailByGuid(@PathVariable UUID guid) {
+        return orderDetailService.getByGuid(guid);
     }
 
-    @PostMapping
-    public ResponseEntity<OrderDetailDTO> createOrderDetail(@RequestBody OrderDetailDTO dto) {
-        return ResponseEntity.ok(orderDetailService.create(dto));
+    @DeleteMapping("/{guid}")
+    public void deleteOrderDetailByGuid(@PathVariable UUID guid) {
+        orderDetailService.deleteByGuid(guid);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<OrderDetailDTO> updateOrderDetail(@PathVariable Integer id, @RequestBody OrderDetailDTO dto) {
-        return ResponseEntity.ok(orderDetailService.update(id, dto));
+    @GetMapping("/order/{orderGuid}")
+    public List<OrderDetailResponseDto> getOrderDetailsByOrderGuid(@PathVariable UUID orderGuid) {
+        return orderDetailService.getByOrderGuid(orderGuid);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrderDetail(@PathVariable Integer id) {
-        orderDetailService.delete(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{guid}")
+    public OrderDetailResponseDto updateOrderDetail(
+            @PathVariable UUID guid,
+            @RequestBody OrderDetailRequestDto dto
+    ) {
+        return orderDetailService.update(guid, dto);
     }
 }

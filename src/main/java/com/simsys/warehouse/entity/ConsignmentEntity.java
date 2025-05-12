@@ -1,65 +1,55 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
-@Table(name = "consignment")
+@Table(name = "consignments", uniqueConstraints = @UniqueConstraint(columnNames = "sku"))
 public class ConsignmentEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "consignment_id_gen")
-    @SequenceGenerator(name = "consignment_id_gen", sequenceName = "consignment_consignmentid_seq", allocationSize = 1)
-    @Column(name = "consignmentid", nullable = false)
-    private Integer id;
 
-    @Size(max = 255)
-    @Column(name = "sku")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String sku;
 
-    @Size(max = 255)
-    @Column(name = "name")
+    @Column(nullable = false)
+    private UUID guid = UUID.randomUUID();
+
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @Column(name = "totalquantity")
-    private Integer totalquantity;
+    private BigDecimal price;
 
-    @Column(name = "totalprice")
-    private BigDecimal totalprice;
+    private Integer quantity;
 
-    @Column(name = "importdate")
-    private LocalDate importdate;
+    private LocalDateTime createDate = LocalDateTime.now();
 
-    @Column(name = "status", length = Integer.MAX_VALUE)
-    private String status;
+    // Foreign key thủ công liên kết với Supplier
+    @Column(nullable = false)
+    private UUID supplierGuid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supplierid")
-    private SupplierEntity supplierid;
+    // Foreign key thủ công liên kết với PurchaseOrder
+    @Column(nullable = false)
+    private UUID purchaseOrderGuid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid")
-    private UserEntity userid;
+    // Getters & Setters
 
-    @OneToMany(mappedBy = "consignmentid")
-    private Set<ProductEntity> products = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "consignmentid")
-    private Set<SupplierPerformanceEntity> supplierPerformanceEntities = new LinkedHashSet<>();
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public UUID getGuid() {
+        return guid;
+    }
+
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
     public String getSku() {
@@ -86,68 +76,43 @@ public class ConsignmentEntity {
         this.description = description;
     }
 
-    public Integer getTotalquantity() {
-        return totalquantity;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setTotalquantity(Integer totalquantity) {
-        this.totalquantity = totalquantity;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public BigDecimal getTotalprice() {
-        return totalprice;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setTotalprice(BigDecimal totalprice) {
-        this.totalprice = totalprice;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    public LocalDate getImportdate() {
-        return importdate;
+    public LocalDateTime getCreateDate() {
+        return createDate;
     }
 
-    public void setImportdate(LocalDate importdate) {
-        this.importdate = importdate;
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 
-    public String getStatus() {
-        return status;
+    public UUID getSupplierGuid() {
+        return supplierGuid;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setSupplierGuid(UUID supplierGuid) {
+        this.supplierGuid = supplierGuid;
     }
 
-    public SupplierEntity getSupplierid() {
-        return supplierid;
+    public UUID getPurchaseOrderGuid() {
+        return purchaseOrderGuid;
     }
 
-    public void setSupplierid(SupplierEntity supplierid) {
-        this.supplierid = supplierid;
+    public void setPurchaseOrderGuid(UUID purchaseOrderGuid) {
+        this.purchaseOrderGuid = purchaseOrderGuid;
     }
-
-    public UserEntity getUserid() {
-        return userid;
-    }
-
-    public void setUserid(UserEntity userid) {
-        this.userid = userid;
-    }
-
-    public Set<ProductEntity> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<ProductEntity> products) {
-        this.products = products;
-    }
-
-    public Set<SupplierPerformanceEntity> getSupplierperformances() {
-        return supplierPerformanceEntities;
-    }
-
-    public void setSupplierperformances(Set<SupplierPerformanceEntity> supplierPerformanceEntities) {
-        this.supplierPerformanceEntities = supplierPerformanceEntities;
-    }
-
 }

@@ -1,53 +1,77 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
-@Table(name = "purchaseorderdetail")
+@Table(name = "purchase_order_details")
 public class PurchaseOrderDetailEntity {
+
     @Id
-    @ColumnDefault("nextval('purchaseorderdetail_purchaseorderdetailid_seq')")
-    @Column(name = "purchaseorderdetailid", nullable = false)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private UUID guid = UUID.randomUUID();
+
+    @Column(name = "purchase_order_guid", nullable = false)
+    private UUID purchaseOrderGuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchaseorderid")
-    private PurchaseOrderEntity purchaseorderid;
+    @JoinColumn(name = "purchase_order_guid", referencedColumnName = "guid", insertable = false, updatable = false)
+    private PurchaseOrderEntity purchaseOrder;
 
-    @Column(name = "price")
-    private BigDecimal price;
+    @Column(name = "product_guid", nullable = false)
+    private UUID productGuid;
 
-    @Column(name = "quantity")
+    @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "total")
-    private BigDecimal total;
+    public PurchaseOrderDetailEntity() {
+    }
 
-    public Integer getId() {
+    public PurchaseOrderDetailEntity(UUID purchaseOrderGuid, UUID productGuid, Integer quantity) {
+        this.purchaseOrderGuid = purchaseOrderGuid;
+        this.productGuid = productGuid;
+        this.quantity = quantity;
+    }
+
+    // Getters and Setters
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public UUID getGuid() {
+        return guid;
     }
 
-    public PurchaseOrderEntity getPurchaseorderid() {
-        return purchaseorderid;
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
-    public void setPurchaseorderid(PurchaseOrderEntity purchaseorderid) {
-        this.purchaseorderid = purchaseorderid;
+    public UUID getPurchaseOrderGuid() {
+        return purchaseOrderGuid;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public void setPurchaseOrderGuid(UUID purchaseOrderGuid) {
+        this.purchaseOrderGuid = purchaseOrderGuid;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public PurchaseOrderEntity getPurchaseOrder() {
+        return purchaseOrder;
+    }
+
+    public void setPurchaseOrder(PurchaseOrderEntity purchaseOrder) {
+        this.purchaseOrder = purchaseOrder;
+    }
+
+    public UUID getProductGuid() {
+        return productGuid;
+    }
+
+    public void setProductGuid(UUID productGuid) {
+        this.productGuid = productGuid;
     }
 
     public Integer getQuantity() {
@@ -57,13 +81,4 @@ public class PurchaseOrderDetailEntity {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
 }

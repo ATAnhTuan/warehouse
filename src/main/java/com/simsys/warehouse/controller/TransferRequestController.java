@@ -1,46 +1,54 @@
 package com.simsys.warehouse.controller;
 
-import com.simsys.warehouse.dto.TransferRequestDTO;
+import com.simsys.warehouse.requestdto.TransferRequestRequestDto;
+import com.simsys.warehouse.responsedto.TransferRequestResponseDto;
 import com.simsys.warehouse.service.TransferRequestService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/transfer-requests")
 @Tag(name = "Transfer Requests")
 public class TransferRequestController {
 
-    @Autowired
-    private TransferRequestService transferRequestService;
+    private final TransferRequestService service;
 
-    @GetMapping
-    public List<TransferRequestDTO> getAllTransferRequests() {
-        return transferRequestService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<TransferRequestDTO> getTransferRequestById(@PathVariable Integer id) {
-        TransferRequestDTO dto = transferRequestService.findById(id);
-        return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.notFound().build();
+    public TransferRequestController(TransferRequestService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<TransferRequestDTO> createTransferRequest(@RequestBody TransferRequestDTO dto) {
-        return ResponseEntity.ok(transferRequestService.create(dto));
+    public ResponseEntity<TransferRequestResponseDto> create(@RequestBody TransferRequestRequestDto dto) {
+        TransferRequestResponseDto response = service.create(dto);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<TransferRequestDTO> updateTransferRequest(@PathVariable Integer id, @RequestBody TransferRequestDTO dto) {
-        return ResponseEntity.ok(transferRequestService.update(id, dto));
+    @GetMapping
+    public ResponseEntity<List<TransferRequestResponseDto>> getAll() {
+        List<TransferRequestResponseDto> responses = service.getAll();
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransferRequest(@PathVariable Integer id) {
-        transferRequestService.delete(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{guid}")
+    public ResponseEntity<TransferRequestResponseDto> getByGuid(@PathVariable UUID guid) {
+        TransferRequestResponseDto response = service.getByGuid(guid);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/{guid}")
+    public ResponseEntity<TransferRequestResponseDto> update(@PathVariable UUID guid, @RequestBody TransferRequestRequestDto dto) {
+        TransferRequestResponseDto response = service.update(guid, dto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{guid}")
+    public ResponseEntity<Void> delete(@PathVariable UUID guid) {
+        service.delete(guid);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

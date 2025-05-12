@@ -1,32 +1,46 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "systemconfig")
+@Table(name = "system_configs")
 public class SystemConfigEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "systemconfig_id_gen")
-    @SequenceGenerator(name = "systemconfig_id_gen", sequenceName = "systemconfig_configid_seq", allocationSize = 1)
-    @Column(name = "configid", nullable = false)
-    private Integer id;
 
-    @Size(max = 255)
-    @Column(name = "name")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(name = "configvalue", length = Integer.MAX_VALUE)
-    private String configvalue;
+    @Column(name = "config_value", nullable = false)
+    private String configValue;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    public Integer getId() {
+    // Constructors
+    public SystemConfigEntity() {
+    }
+
+    public SystemConfigEntity(String name, String configValue, String description) {
+        this.name = name;
+        this.configValue = configValue;
+        this.description = description;
+    }
+
+    public SystemConfigEntity(Long id, String name, String configValue, String description) {
+        this.id = id;
+        this.name = name;
+        this.configValue = configValue;
+        this.description = description;
+    }
+
+    // Getters and Setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -38,12 +52,12 @@ public class SystemConfigEntity {
         this.name = name;
     }
 
-    public String getConfigvalue() {
-        return configvalue;
+    public String getConfigValue() {
+        return configValue;
     }
 
-    public void setConfigvalue(String configvalue) {
-        this.configvalue = configvalue;
+    public void setConfigValue(String configValue) {
+        this.configValue = configValue;
     }
 
     public String getDescription() {
@@ -53,5 +67,4 @@ public class SystemConfigEntity {
     public void setDescription(String description) {
         this.description = description;
     }
-
 }

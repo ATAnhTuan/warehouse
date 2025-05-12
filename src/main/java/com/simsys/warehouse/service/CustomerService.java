@@ -1,57 +1,53 @@
 package com.simsys.warehouse.service;
 
-import com.simsys.warehouse.dto.CustomerDTO;
 import com.simsys.warehouse.entity.CustomerEntity;
 import com.simsys.warehouse.mapper.CustomerMapper;
 import com.simsys.warehouse.repository.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.simsys.warehouse.requestdto.CustomerRequestDto;
+import com.simsys.warehouse.responsedto.CustomerResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
 
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
-    public List<CustomerDTO> findAll() {
-        return customerRepository.findAll().stream()
-                .map(CustomerMapper::toDTO)
-                .collect(Collectors.toList());
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
 
-    public CustomerDTO findById(Integer id) {
-        return customerRepository.findById(id)
-                .map(CustomerMapper::toDTO)
-                .orElse(null);
+    public CustomerEntity create(CustomerRequestDto dto) {
+        CustomerEntity customer = CustomerMapper.toEntity(dto);
+        return customerRepository.save(customer);
     }
 
-    public CustomerDTO create(CustomerDTO dto) {
-        CustomerEntity entity = CustomerMapper.toEntity(dto);
-        CustomerEntity savedEntity = customerRepository.save(entity);
-        return CustomerMapper.toDTO(savedEntity);
+    public List<CustomerResponseDto> findAll() {
+        return CustomerMapper.toResponseDtoList(customerRepository.findAll());
     }
 
-    public CustomerDTO update(Integer id, CustomerDTO dto) {
-        CustomerEntity existingEntity = customerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
-
-        existingEntity.setName(dto.getName());
-        existingEntity.setAddress(dto.getAddress());
-        existingEntity.setPhone(dto.getPhone());
-        existingEntity.setEmail(dto.getEmail());
-        existingEntity.setStatus(dto.getStatus());
-        existingEntity.setBankcard(dto.getBankcard());
-        existingEntity.setCreateddate(dto.getCreatedDate());
-        existingEntity.setUpdateddate(dto.getUpdatedDate());
-
-        CustomerEntity updatedEntity = customerRepository.save(existingEntity);
-        return CustomerMapper.toDTO(updatedEntity);
+    public Optional<CustomerEntity> findById(Long id) {
+        return customerRepository.findById(id);
     }
 
-    public void delete(Integer id) {
-        customerRepository.deleteById(id);
+    public Optional<CustomerEntity> update(Long id, CustomerRequestDto dto) {
+        return customerRepository.findById(id).map(existing -> {
+            existing.setName(dto.getName());
+            existing.setPhone(dto.getPhone());
+            existing.setEmail(dto.getEmail());
+            existing.setAddress(dto.getAddress());
+            existing.setBankCard(dto.getBankCard());
+            return customerRepository.save(existing);
+        });
+    }
+
+    public boolean delete(Long id) {
+        if (customerRepository.existsById(id)) {
+            customerRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

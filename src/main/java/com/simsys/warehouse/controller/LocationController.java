@@ -1,6 +1,7 @@
 package com.simsys.warehouse.controller;
 
-import com.simsys.warehouse.dto.LocationDTO;
+import com.simsys.warehouse.requestdto.LocationRequestDto;
+import com.simsys.warehouse.responsedto.LocationResponseDto;
 import com.simsys.warehouse.service.LocationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,39 +9,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/locations")
-@Tag(name = "Locations")
+@Tag(name = "Location")
 public class LocationController {
 
     @Autowired
     private LocationService locationService;
 
-    @GetMapping
-    public List<LocationDTO> getAllLocations() {
-        return locationService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<LocationDTO> getLocationById(@PathVariable Integer id) {
-        LocationDTO dto = locationService.findById(id);
-        return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.notFound().build();
-    }
-
     @PostMapping
-    public ResponseEntity<LocationDTO> createLocation(@RequestBody LocationDTO dto) {
+    public ResponseEntity<LocationResponseDto> create(@RequestBody LocationRequestDto dto) {
         return ResponseEntity.ok(locationService.create(dto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<LocationDTO> updateLocation(@PathVariable Integer id, @RequestBody LocationDTO dto) {
-        return ResponseEntity.ok(locationService.update(id, dto));
+    @GetMapping("/{guid}")
+    public ResponseEntity<LocationResponseDto> getByGuid(@PathVariable UUID guid) {
+        return locationService.findByGuid(guid)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLocation(@PathVariable Integer id) {
-        locationService.delete(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping
+    public ResponseEntity<List<LocationResponseDto>> getAll() {
+        return ResponseEntity.ok(locationService.findAll());
+    }
+
+    @PutMapping("/{guid}")
+    public ResponseEntity<LocationResponseDto> update(@PathVariable UUID guid, @RequestBody LocationRequestDto dto) {
+        return locationService.update(guid, dto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{guid}")
+    public ResponseEntity<Void> delete(@PathVariable UUID guid) {
+        if (locationService.deleteByGuid(guid)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

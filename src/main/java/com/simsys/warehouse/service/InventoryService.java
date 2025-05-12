@@ -1,53 +1,66 @@
 package com.simsys.warehouse.service;
 
-import com.simsys.warehouse.dto.InventoryDTO;
 import com.simsys.warehouse.entity.InventoryEntity;
 import com.simsys.warehouse.mapper.InventoryMapper;
 import com.simsys.warehouse.repository.InventoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.simsys.warehouse.requestdto.InventoryRequestDto;
+import com.simsys.warehouse.responsedto.InventoryResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class InventoryService {
 
-    @Autowired
-    private InventoryRepository inventoryRepository;
+    private final InventoryRepository inventoryRepository;
 
-    public List<InventoryDTO> findAll() {
+    public InventoryService(InventoryRepository inventoryRepository) {
+        this.inventoryRepository = inventoryRepository;
+    }
+
+    public InventoryResponseDto create(InventoryRequestDto dto) {
+        InventoryEntity entity = InventoryMapper.toEntity(dto);
+        InventoryEntity saved = inventoryRepository.save(entity);
+        return InventoryMapper.toResponseDto(saved);
+    }
+
+    public List<InventoryResponseDto> findAll() {
         return inventoryRepository.findAll().stream()
-                .map(InventoryMapper::toDTO)
+                .map(InventoryMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public InventoryDTO findById(Integer id) {
-        return inventoryRepository.findById(id)
-                .map(InventoryMapper::toDTO)
-                .orElse(null);
+    public Optional<InventoryResponseDto> findByGuid(UUID guid) {
+        return inventoryRepository.findByGuid(guid)
+                .map(InventoryMapper::toResponseDto);
     }
 
-    public InventoryDTO create(InventoryDTO inventoryDTO) {
-        InventoryEntity entity = InventoryMapper.toEntity(inventoryDTO);
-        InventoryEntity savedEntity = inventoryRepository.save(entity);
-        return InventoryMapper.toDTO(savedEntity);
+    public Optional<InventoryResponseDto> updateByGuid(UUID guid, InventoryRequestDto dto) {
+        return inventoryRepository.findByGuid(guid)
+                .map(existing -> {
+                    existing.setName(dto.getName());
+                    existing.setDescription(dto.getDescription());
+                    existing.setQuantity(dto.getQuantity());
+                    existing.setUserGuid(dto.getUserGuid());
+                    InventoryEntity updated = inventoryRepository.save(existing);
+                    return InventoryMapper.toResponseDto(updated);
+                });
     }
 
-    public InventoryDTO update(Integer id, InventoryDTO inventoryDTO) {
-        InventoryEntity existingEntity = inventoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Inventory not found"));
-
-        existingEntity.setName(inventoryDTO.getName());
-        existingEntity.setAddress(inventoryDTO.getAddress());
-        existingEntity.setQuantity(inventoryDTO.getQuantity());
-        existingEntity.setDescription(inventoryDTO.getDescription());
-
-        InventoryEntity updatedEntity = inventoryRepository.save(existingEntity);
-        return InventoryMapper.toDTO(updatedEntity);
+    public boolean deleteByGuid(UUID guid) {
+        return inventoryRepository.findByGuid(guid)
+                .map(entity -> {
+                    inventoryRepository.delete(entity);
+                    return true;
+                }).orElse(false);
     }
 
-    public void delete(Integer id) {
-        inventoryRepository.deleteById(id);
+    public List<InventoryResponseDto> findByUserGuid(UUID userGuid) {
+        return inventoryRepository.findByUserGuid(userGuid).stream()
+                .map(InventoryMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 }

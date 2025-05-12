@@ -1,42 +1,35 @@
 package com.simsys.warehouse.mapper;
 
-import com.simsys.warehouse.dto.ConsignmentDTO;
 import com.simsys.warehouse.entity.ConsignmentEntity;
-import com.simsys.warehouse.entity.SupplierEntity;
-import com.simsys.warehouse.entity.UserEntity;
-
-import java.util.stream.Collectors;
+import com.simsys.warehouse.requestdto.ConsignmentRequestDto;
+import com.simsys.warehouse.responsedto.ConsignmentResponseDto;
 
 public class ConsignmentMapper {
 
-    public static ConsignmentDTO toDTO(ConsignmentEntity entity) {
-        return new ConsignmentDTO(
-                entity.getId(),
-                entity.getSku(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getTotalquantity(),
-                entity.getTotalprice(),
-                entity.getImportdate(),
-                entity.getStatus(),
-                entity.getSupplierid() != null ? entity.getSupplierid().getSupplierId() : null,
-                entity.getUserid() != null ? entity.getUserid().getUserId() : null,
-                entity.getProducts().stream().map(product -> product.getProductid()).collect(Collectors.toList())
-        );
-    }
-
-    public static ConsignmentEntity toEntity(ConsignmentDTO dto, SupplierEntity supplierEntity, UserEntity userEntity) {
+    public static ConsignmentEntity toEntity(ConsignmentRequestDto dto) {
         ConsignmentEntity entity = new ConsignmentEntity();
-        entity.setId(dto.getId());
         entity.setSku(dto.getSku());
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
-        entity.setTotalquantity(dto.getTotalQuantity());
-        entity.setTotalprice(dto.getTotalPrice());
-        entity.setImportdate(dto.getImportDate());
-        entity.setStatus(dto.getStatus());
-        entity.setSupplierid(supplierEntity);
-        entity.setUserid(userEntity);
+        entity.setPrice(dto.getPrice());
+        entity.setQuantity(dto.getQuantity());
+        entity.setSupplierGuid(dto.getSupplierGuid());
+        entity.setPurchaseOrderGuid(dto.getPurchaseOrderGuid());
         return entity;
+    }
+
+    public static ConsignmentResponseDto toResponseDto(ConsignmentEntity entity) {
+        ConsignmentResponseDto dto = new ConsignmentResponseDto();
+        dto.setId(entity.getId());
+        dto.setGuid(entity.getGuid());
+        dto.setSku(entity.getSku());
+        dto.setName(entity.getName());
+        dto.setDescription(entity.getDescription());
+        dto.setPrice(entity.getPrice());
+        dto.setQuantity(entity.getQuantity());
+        dto.setCreateDate(entity.getCreateDate());
+        dto.setSupplierGuid(entity.getSupplierGuid());
+        dto.setPurchaseOrderGuid(entity.getPurchaseOrderGuid());
+        return dto;
     }
 }

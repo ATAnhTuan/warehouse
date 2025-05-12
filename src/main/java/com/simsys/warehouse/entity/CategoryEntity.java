@@ -1,31 +1,34 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
-import org.hibernate.annotations.ColumnDefault;
+
+import java.util.UUID;
 
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 public class CategoryEntity {
-    @Id
-    @ColumnDefault("nextval('category_categoryid_seq')")
-    @Column(name = "categoryid", nullable = false)
-    private Integer id;
 
-    @Size(max = 255)
-    @Column(name = "name")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productid")
-    private ProductEntity productid;
+    private String description;
 
-    public Integer getId() {
-        return id;
+    @Column(nullable = false, unique = true, updatable = false)
+    private UUID guid;
+
+    @PrePersist
+    public void generateGuid() {
+        if (guid == null) {
+            guid = UUID.randomUUID();
+        }
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -36,12 +39,15 @@ public class CategoryEntity {
         this.name = name;
     }
 
-    public ProductEntity getProductid() {
-        return productid;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProductid(ProductEntity productid) {
-        this.productid = productid;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
+    public UUID getGuid() {
+        return guid;
+    }
 }

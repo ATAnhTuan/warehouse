@@ -3,39 +3,78 @@ package com.simsys.warehouse.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 public class TransactionEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_gen")
-    @SequenceGenerator(name = "transaction_id_gen", sequenceName = "transaction_transactionid_seq", allocationSize = 1)
-    @Column(name = "transactionid", nullable = false)
-    private Integer id;
 
-    @Column(name = "money")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private UUID guid = UUID.randomUUID();
+
+    @Column(nullable = false)
     private BigDecimal money;
 
-    @Column(name = "note", length = Integer.MAX_VALUE)
-    private String note;
+    private String description;
 
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(nullable = false)
+    private LocalDateTime createDate = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid")
-    private UserEntity userid;
+    @Column(name = "customer_guid", nullable = false)
+    private UUID customerGuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderid")
-    private OrderEntity orderid;
+    @JoinColumn(name = "customer_guid", referencedColumnName = "guid", insertable = false, updatable = false)
+    private CustomerEntity customer;
 
-    public Integer getId() {
+
+    public TransactionEntity() {
+    }
+
+    public TransactionEntity(BigDecimal money, String description, LocalDateTime createDate, UUID customerGuid, CustomerEntity customer, UUID guid) {
+        this.money = money;
+        this.description = description;
+        this.createDate = createDate;
+        this.customerGuid = customerGuid;
+        this.customer = customer;
+        this.guid = guid;
+    }
+
+    public UUID getCustomerGuid() {
+        return customerGuid;
+    }
+
+    public void setCustomerGuid(UUID customerGuid) {
+        this.customerGuid = customerGuid;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public UUID getGuid() {
+        return guid;
+    }
+
+    public void setGuid(UUID guid) {
+        this.guid = guid;
+    }
+    // Getters and Setters
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -47,36 +86,19 @@ public class TransactionEntity {
         this.money = money;
     }
 
-    public String getNote() {
-        return note;
+    public LocalDateTime getCreateDate() {
+        return createDate;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public CustomerEntity getCustomer() {
+        return customer;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setCustomer(CustomerEntity customer) {
+        this.customer = customer;
     }
-
-    public UserEntity getUserid() {
-        return userid;
-    }
-
-    public void setUserid(UserEntity userid) {
-        this.userid = userid;
-    }
-
-    public OrderEntity getOrderid() {
-        return orderid;
-    }
-
-    public void setOrderid(OrderEntity orderid) {
-        this.orderid = orderid;
-    }
-
 }

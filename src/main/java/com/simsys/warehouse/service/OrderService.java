@@ -1,15 +1,15 @@
 package com.simsys.warehouse.service;
 
-import com.simsys.warehouse.dto.OrderDTO;
-import com.simsys.warehouse.entity.CustomerEntity;
+import com.simsys.warehouse.requestdto.OrderRequestDto;
 import com.simsys.warehouse.entity.OrderEntity;
 import com.simsys.warehouse.mapper.OrderMapper;
-import com.simsys.warehouse.repository.CustomerRepository;
 import com.simsys.warehouse.repository.OrderRepository;
+import com.simsys.warehouse.responsedto.OrderResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,47 +18,40 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
-    private CustomerRepository customerRepository;
+    public OrderResponseDto createOrder(OrderRequestDto dto) {
+        OrderEntity entity = OrderMapper.toEntity(dto);
+        OrderEntity saved = orderRepository.save(entity);
+        return OrderMapper.toResponseDto(saved);
+    }
 
-    public List<OrderDTO> findAll() {
-        return orderRepository.findAll().stream()
-                .map(OrderMapper::toDTO)
+    public List<OrderResponseDto> getAllOrders() {
+        return orderRepository.findAll()
+                .stream()
+                .map(OrderMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public OrderDTO findById(Integer id) {
-        return orderRepository.findById(id)
-                .map(OrderMapper::toDTO)
-                .orElse(null);
+    public OrderResponseDto getByGuid(UUID guid) {
+        OrderEntity entity = orderRepository.findByGuid(guid)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return OrderMapper.toResponseDto(entity);
     }
 
-    public OrderDTO create(OrderDTO dto) {
-        CustomerEntity customer = customerRepository.findById(dto.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
-
-        OrderEntity entity = OrderMapper.toEntity(dto, customer);
-        OrderEntity savedEntity = orderRepository.save(entity);
-        return OrderMapper.toDTO(savedEntity);
+    public void deleteByGuid(UUID guid) {
+        orderRepository.deleteByGuid(guid);
     }
 
-    public OrderDTO update(Integer id, OrderDTO dto) {
-        OrderEntity existingEntity = orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+    public OrderResponseDto updateOrder(UUID guid, OrderRequestDto dto) {
+        OrderEntity existing = orderRepository.findByGuid(guid)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        CustomerEntity customer = customerRepository.findById(dto.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+        existing.setCustomerGuid(dto.getCustomerGuid());
+        existing.setDescription(dto.getDescription());
+        existing.setTotalPrice(dto.getTotalPrice());
+        existing.setIsActive(dto.getIsActive());
 
-        existingEntity.setTotalprice(dto.getTotalPrice());
-        existingEntity.setOrderdate(dto.getOrderDate());
-        existingEntity.setStatus(dto.getStatus());
-        existingEntity.setCustomerid(customer);
+        // Optional: Update orderDetails if needed
 
-        OrderEntity updatedEntity = orderRepository.save(existingEntity);
-        return OrderMapper.toDTO(updatedEntity);
-    }
-
-    public void delete(Integer id) {
-        orderRepository.deleteById(id);
+        return OrderMapper.toResponseDto(orderRepository.save(existing));
     }
 }

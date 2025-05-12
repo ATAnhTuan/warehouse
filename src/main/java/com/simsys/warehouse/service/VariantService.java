@@ -1,13 +1,14 @@
 package com.simsys.warehouse.service;
 
-import com.simsys.warehouse.dto.VariantDTO;
 import com.simsys.warehouse.entity.VariantEntity;
 import com.simsys.warehouse.mapper.VariantMapper;
 import com.simsys.warehouse.repository.VariantRepository;
+import com.simsys.warehouse.requestdto.VariantRequestDto;
+import com.simsys.warehouse.responsedto.VariantResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class VariantService {
@@ -18,35 +19,33 @@ public class VariantService {
         this.variantRepository = variantRepository;
     }
 
-    public VariantDTO createVariant(VariantDTO dto) {
-        VariantEntity entity = VariantMapper.toEntity(dto);
-        return VariantMapper.toDTO(variantRepository.save(entity));
+    public VariantEntity create(VariantRequestDto dto) {
+        VariantEntity variant = VariantMapper.toEntity(dto);
+        return variantRepository.save(variant);
     }
 
-    public List<VariantDTO> getAllVariants() {
-        return variantRepository.findAll().stream()
-                .map(VariantMapper::toDTO)
-                .collect(Collectors.toList());
+    public List<VariantResponseDto> findAll() {
+        return VariantMapper.toResponseDtoList(variantRepository.findAll());
     }
 
-    public VariantDTO getVariantById(Integer id) {
-        VariantEntity entity = variantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Variant not found with ID: " + id));
-        return VariantMapper.toDTO(entity);
+    public Optional<VariantEntity> findById(Long id) {
+        return variantRepository.findById(id);
     }
 
-    public VariantDTO updateVariant(Integer id, VariantDTO dto) {
-        VariantEntity existingEntity = variantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Variant not found with ID: " + id));
-
-        existingEntity.setName(dto.getName());
-
-        return VariantMapper.toDTO(variantRepository.save(existingEntity));
+    public Optional<VariantEntity> update(Long id, VariantRequestDto dto) {
+        return variantRepository.findById(id)
+                .map(existing -> {
+                    existing.setColor(dto.getColor());
+                    existing.setSize(dto.getSize());
+                    return variantRepository.save(existing);
+                });
     }
 
-    public void deleteVariant(Integer id) {
-        VariantEntity existingEntity = variantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Variant not found with ID: " + id));
-        variantRepository.delete(existingEntity);
+    public boolean delete(Long id) {
+        if (variantRepository.existsById(id)) {
+            variantRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

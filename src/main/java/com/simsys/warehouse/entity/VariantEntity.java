@@ -2,38 +2,73 @@ package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+import java.util.UUID;
+
 @Entity
-@Table(name = "variant")
+@Table(name = "variants")
 public class VariantEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "variantid")
-    private Integer variantID;
+    private Long id;
 
-    @Column(name = "name")
-    private String name;
+    private String color;
+    private String size;
 
-    public VariantEntity(Integer variantID, String name) {
-        this.variantID = variantID;
-        this.name = name;
-    }
+    @Column(nullable = false, unique = true)
+    private UUID guid = UUID.randomUUID();
+
+    @OneToMany(mappedBy = "variant", fetch = FetchType.LAZY)
+    private List<ProductEntity> products;
 
     public VariantEntity() {
     }
 
-    public Integer getVariantID() {
-        return variantID;
+    public VariantEntity(String color, String size, UUID guid, List<ProductEntity> products) {
+        this.color = color;
+        this.size = size;
+        this.guid = guid;
+        this.products = products;
     }
 
-    public void setVariantID(Integer variantID) {
-        this.variantID = variantID;
+    public Long getId() {
+        return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public UUID getGuid() {
+        return guid;
+    }
+
+    public void setGuid(UUID guid) {
+        this.guid = guid;
+    }
+
+    public List<ProductEntity> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductEntity> products) {
+        this.products = products;
     }
 }

@@ -2,6 +2,8 @@ package com.simsys.warehouse.repository;
 
 import com.simsys.warehouse.entity.TransactionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TransactionRepository extends JpaRepository<TransactionEntity, Integer> {
+@Repository
+public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
 }

@@ -2,37 +2,89 @@ package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
-@Table(name = "orderdetail")
+@Table(name = "order_details")
 public class OrderDetailEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orderdetail_id_gen")
-    @SequenceGenerator(name = "orderdetail_id_gen", sequenceName = "orderdetail_orderdetailid_seq", allocationSize = 1)
-    @Column(name = "orderdetailid", nullable = false)
-    private Integer id;
 
-    @Column(name = "quantity")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private UUID guid = UUID.randomUUID();
+
+    @Column(name = "order_guid", nullable = false)
+    private UUID orderGuid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_guid", referencedColumnName = "guid", insertable = false, updatable = false)
+    private OrderEntity order;
+
+    @Column(name = "product_guid", nullable = false)
+    private UUID productGuid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_guid", referencedColumnName = "guid", insertable = false, updatable = false)
+    private ProductEntity product;
+
+    @Column(nullable = false)
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userinventoryid")
-    private UserInventoryEntity userinventoryid;
+    public OrderDetailEntity() {
+    }
 
-    @Column(name = "saleprice")
-    private BigDecimal saleprice;
+    public OrderDetailEntity(UUID orderGuid, UUID productGuid, Integer quantity) {
+        this.orderGuid = orderGuid;
+        this.productGuid = productGuid;
+        this.quantity = quantity;
+    }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderid")
-    private OrderEntity orderid;
+    // Getters and setters
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public UUID getGuid() {
+        return guid;
+    }
+
+    public void setGuid(UUID guid) {
+        this.guid = guid;
+    }
+
+    public UUID getOrderGuid() {
+        return orderGuid;
+    }
+
+    public void setOrderGuid(UUID orderGuid) {
+        this.orderGuid = orderGuid;
+    }
+
+    public OrderEntity getOrder() {
+        return order;
+    }
+
+    public void setOrder(OrderEntity order) {
+        this.order = order;
+    }
+
+    public UUID getProductGuid() {
+        return productGuid;
+    }
+
+    public void setProductGuid(UUID productGuid) {
+        this.productGuid = productGuid;
+    }
+
+    public ProductEntity getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductEntity product) {
+        this.product = product;
     }
 
     public Integer getQuantity() {
@@ -42,29 +94,4 @@ public class OrderDetailEntity {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
-
-    public UserInventoryEntity getUserinventoryid() {
-        return userinventoryid;
-    }
-
-    public void setUserinventoryid(UserInventoryEntity userinventoryid) {
-        this.userinventoryid = userinventoryid;
-    }
-
-    public BigDecimal getSaleprice() {
-        return saleprice;
-    }
-
-    public void setSaleprice(BigDecimal saleprice) {
-        this.saleprice = saleprice;
-    }
-
-    public OrderEntity getOrderid() {
-        return orderid;
-    }
-
-    public void setOrderid(OrderEntity orderid) {
-        this.orderid = orderid;
-    }
-
 }

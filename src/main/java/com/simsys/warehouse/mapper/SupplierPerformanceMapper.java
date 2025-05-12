@@ -1,34 +1,34 @@
 package com.simsys.warehouse.mapper;
 
-import com.simsys.warehouse.dto.SupplierPerformanceDTO;
-import com.simsys.warehouse.entity.ConsignmentEntity;
 import com.simsys.warehouse.entity.SupplierPerformanceEntity;
+import com.simsys.warehouse.requestdto.SupplierPerformanceRequestDto;
+import com.simsys.warehouse.responsedto.SupplierPerformanceResponseDto;
 
 public class SupplierPerformanceMapper {
 
-    public static SupplierPerformanceDTO toDTO(SupplierPerformanceEntity entity) {
-        return new SupplierPerformanceDTO(
-                entity.getId(),
-                entity.getOntimedeliveryrate(),
-                entity.getProductqualityrating(),
-                entity.getNotes(),
-                entity.getRulescompletionrate(),
-                entity.getLastevaluated(),
-                entity.getConsignmentid() != null ? entity.getConsignmentid().getId() : null,
-                entity.getStatus()
-        );
+    public static SupplierPerformanceEntity toEntity(SupplierPerformanceRequestDto dto) {
+        SupplierPerformanceEntity entity = new SupplierPerformanceEntity();
+        entity.setSupplierGuid(dto.getSupplierGuid());
+        entity.setConsignmentGuid(dto.getConsignmentGuid());
+        entity.setUserGuid(dto.getUserGuid());
+        entity.setOnTimeDeliveryRate(dto.getOnTimeDeliveryRate());
+        entity.setProductQualityRating(dto.getProductQualityRating());
+        entity.setSupplyCompletionRate(dto.getSupplyCompletionRate());
+        entity.setDescription(dto.getDescription());
+        return entity;
     }
 
-    public static SupplierPerformanceEntity toEntity(SupplierPerformanceDTO dto, ConsignmentEntity consignmentEntity) {
-        SupplierPerformanceEntity entity = new SupplierPerformanceEntity();
-        entity.setId(dto.getId());
-        entity.setOntimedeliveryrate(dto.getOnTimeDeliveryRate());
-        entity.setProductqualityrating(dto.getProductQualityRating());
-        entity.setNotes(dto.getNotes());
-        entity.setRulescompletionrate(dto.getRulesCompletionRate());
-        entity.setLastevaluated(dto.getLastEvaluated());
-        entity.setConsignmentid(consignmentEntity);
-        entity.setStatus(dto.getStatus());
-        return entity;
+    public static SupplierPerformanceResponseDto toResponseDto(SupplierPerformanceEntity entity) {
+        SupplierPerformanceResponseDto dto = new SupplierPerformanceResponseDto();
+        dto.setId(entity.getId());
+        dto.setGuid(entity.getGuid());
+        dto.setSupplierGuid(entity.getSupplierGuid());
+        dto.setConsignmentGuid(entity.getConsignmentGuid());
+        dto.setUserGuid(entity.getUserGuid());
+        dto.setOnTimeDeliveryRate(entity.getOnTimeDeliveryRate());
+        dto.setProductQualityRating(entity.getProductQualityRating());
+        dto.setSupplyCompletionRate(entity.getSupplyCompletionRate());
+        dto.setDescription(entity.getDescription());
+        return dto;
     }
 }

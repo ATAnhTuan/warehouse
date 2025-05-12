@@ -1,9 +1,11 @@
 package com.simsys.warehouse.controller;
 
-import com.simsys.warehouse.dto.TransactionDTO;
+import com.simsys.warehouse.entity.TransactionEntity;
+import com.simsys.warehouse.mapper.TransactionMapper;
+import com.simsys.warehouse.requestdto.TransactionRequestDto;
+import com.simsys.warehouse.responsedto.TransactionResponseDto;
 import com.simsys.warehouse.service.TransactionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,36 +13,46 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
-@Tag(name = "Transactions")
+@Tag(name = "Transaction")
 public class TransactionController {
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
 
-    @GetMapping
-    public List<TransactionDTO> getAllTransactions() {
-        return transactionService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Integer id) {
-        TransactionDTO dto = transactionService.findById(id);
-        return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.notFound().build();
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
     }
 
     @PostMapping
-    public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO dto) {
-        return ResponseEntity.ok(transactionService.create(dto));
+    public ResponseEntity<TransactionResponseDto> create(@RequestBody TransactionRequestDto dto) {
+        TransactionEntity transaction = transactionService.create(dto);
+        return ResponseEntity.ok(TransactionMapper.toResponseDto(transaction));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TransactionResponseDto>> findAll() {
+        return ResponseEntity.ok(transactionService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TransactionResponseDto> findById(@PathVariable Long id) {
+        return transactionService.findById(id)
+                .map(TransactionMapper::toResponseDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable Integer id, @RequestBody TransactionDTO dto) {
-        return ResponseEntity.ok(transactionService.update(id, dto));
+    public ResponseEntity<TransactionResponseDto> update(@PathVariable Long id, @RequestBody TransactionRequestDto dto) {
+        return transactionService.update(id, dto)
+                .map(TransactionMapper::toResponseDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable Integer id) {
-        transactionService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        return transactionService.delete(id)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 }

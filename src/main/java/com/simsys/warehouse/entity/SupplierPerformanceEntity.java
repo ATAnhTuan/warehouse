@@ -1,103 +1,108 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
-@Table(name = "supplierperformance")
+@Table(name = "supplier_performance")
 public class SupplierPerformanceEntity {
+
     @Id
-    @ColumnDefault("nextval('supplierperformance_performanceid_seq')")
-    @Column(name = "performanceid", nullable = false)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "ontimedeliveryrate")
-    private BigDecimal ontimedeliveryrate;
+    @Column(nullable = false, unique = true)
+    private UUID guid = UUID.randomUUID();
 
-    @Column(name = "productqualityrating")
-    private BigDecimal productqualityrating;
+    @Column(nullable = false)
+    private UUID supplierGuid;
 
-    @Column(name = "notes", length = Integer.MAX_VALUE)
-    private String notes;
+    @Column(nullable = false)
+    private UUID consignmentGuid;
 
-    @Column(name = "rulescompletionrate")
-    private BigDecimal rulescompletionrate;
+    @Column(nullable = false)
+    private UUID userGuid;
 
-    @Column(name = "lastevaluated")
-    private LocalDate lastevaluated;
+    @Column(nullable = false, precision = 3, scale = 2)
+    private BigDecimal onTimeDeliveryRate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "consignmentid")
-    private ConsignmentEntity consignmentid;
+    @Column(nullable = false, precision = 3, scale = 2)
+    private BigDecimal productQualityRating;
 
-    @Column(name = "status")
-    private Boolean status;
+    @Column(nullable = false, precision = 3, scale = 2)
+    private BigDecimal supplyCompletionRate;
 
-    public Integer getId() {
+    private String description;
+
+    // Getters and Setters
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public UUID getGuid() {
+        return guid;
     }
 
-    public BigDecimal getOntimedeliveryrate() {
-        return ontimedeliveryrate;
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
-    public void setOntimedeliveryrate(BigDecimal ontimedeliveryrate) {
-        this.ontimedeliveryrate = ontimedeliveryrate;
+    public UUID getSupplierGuid() {
+        return supplierGuid;
     }
 
-    public BigDecimal getProductqualityrating() {
-        return productqualityrating;
+    public void setSupplierGuid(UUID supplierGuid) {
+        this.supplierGuid = supplierGuid;
     }
 
-    public void setProductqualityrating(BigDecimal productqualityrating) {
-        this.productqualityrating = productqualityrating;
+    public UUID getConsignmentGuid() {
+        return consignmentGuid;
     }
 
-    public String getNotes() {
-        return notes;
+    public void setConsignmentGuid(UUID consignmentGuid) {
+        this.consignmentGuid = consignmentGuid;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public UUID getUserGuid() {
+        return userGuid;
     }
 
-    public BigDecimal getRulescompletionrate() {
-        return rulescompletionrate;
+    public void setUserGuid(UUID userGuid) {
+        this.userGuid = userGuid;
     }
 
-    public void setRulescompletionrate(BigDecimal rulescompletionrate) {
-        this.rulescompletionrate = rulescompletionrate;
+    public BigDecimal getOnTimeDeliveryRate() {
+        return onTimeDeliveryRate;
     }
 
-    public LocalDate getLastevaluated() {
-        return lastevaluated;
+    public void setOnTimeDeliveryRate(BigDecimal onTimeDeliveryRate) {
+        this.onTimeDeliveryRate = onTimeDeliveryRate;
     }
 
-    public void setLastevaluated(LocalDate lastevaluated) {
-        this.lastevaluated = lastevaluated;
+    public BigDecimal getProductQualityRating() {
+        return productQualityRating;
     }
 
-    public ConsignmentEntity getConsignmentid() {
-        return consignmentid;
+    public void setProductQualityRating(BigDecimal productQualityRating) {
+        this.productQualityRating = productQualityRating;
     }
 
-    public void setConsignmentid(ConsignmentEntity consignmentid) {
-        this.consignmentid = consignmentid;
+    public BigDecimal getSupplyCompletionRate() {
+        return supplyCompletionRate;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public void setSupplyCompletionRate(BigDecimal supplyCompletionRate) {
+        this.supplyCompletionRate = supplyCompletionRate;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public String getDescription() {
+        return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

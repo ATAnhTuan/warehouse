@@ -2,46 +2,64 @@ package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 public class ProductEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productid")
-    private int productid;
-    @Column(nullable = false)
-    private String name;
-    @Column(nullable = false)
-    private int saleprice;
-    @Column(nullable = false)
-    private int quantity;
-    @Column(nullable = false)
-    private String description;
-    @Column(nullable = false)
-    private boolean status;
-    @Column(nullable = false)
-    private int consignmentid;
+    private Long id;
 
-    public ProductEntity(int productid, String name, int saleprice, int quantity, String description, boolean status, int consignmentid) {
-        this.productid = productid;
+    private String name;
+
+    private Integer quantity;
+
+    private String description;
+
+    private String status;
+
+    @Column(nullable = false, unique = true)
+    private UUID guid = UUID.randomUUID();
+
+    @Column(name = "category_guid", nullable = false)
+    private UUID categoryGuid;
+
+    @Column(name = "variant_guid", nullable = false)
+    private UUID variantGuid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "variant_guid", referencedColumnName = "guid", insertable = false, updatable = false)
+    private VariantEntity variant;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_guid", referencedColumnName = "guid", insertable = false, updatable = false)
+    private CategoryEntity category;
+
+    public ProductEntity() {
+    }
+
+    public ProductEntity(String name, Integer quantity, String description, String status, UUID guid, UUID categoryGuid, UUID variantGuid, VariantEntity variant, CategoryEntity category) {
         this.name = name;
-        this.saleprice = saleprice;
         this.quantity = quantity;
         this.description = description;
         this.status = status;
-        this.consignmentid = consignmentid;
+        this.guid = guid;
+        this.categoryGuid = categoryGuid;
+        this.variantGuid = variantGuid;
+        this.variant = variant;
+        this.category = category;
+    }
+// Getters and Setters
+
+
+    public Long getId() {
+        return id;
     }
 
-    public ProductEntity() {
-
-    }
-
-    public int getProductid() {
-        return productid;
-    }
-
-    public void setProductid(int productid) {
-        this.productid = productid;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -52,19 +70,11 @@ public class ProductEntity {
         this.name = name;
     }
 
-    public int getSaleprice() {
-        return saleprice;
-    }
-
-    public void setSaleprice(int saleprice) {
-        this.saleprice = saleprice;
-    }
-
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -76,32 +86,51 @@ public class ProductEntity {
         this.description = description;
     }
 
-    public boolean isStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public int getConsignmentid() {
-        return consignmentid;
+    public UUID getGuid() {
+        return guid;
     }
 
-    public void setConsignmentid(int consignmentid) {
-        this.consignmentid = consignmentid;
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
-    @Override
-    public String toString() {
-        return "ProductEntity{" +
-                "productid=" + productid +
-                ", name='" + name + '\'' +
-                ", saleprice=" + saleprice +
-                ", quantity=" + quantity +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", consignmentid=" + consignmentid +
-                '}';
+    public UUID getCategoryGuid() {
+        return categoryGuid;
+    }
+
+    public void setCategoryGuid(UUID categoryGuid) {
+        this.categoryGuid = categoryGuid;
+    }
+
+    public UUID getVariantGuid() {
+        return variantGuid;
+    }
+
+    public void setVariantGuid(UUID variantGuid) {
+        this.variantGuid = variantGuid;
+    }
+
+    public VariantEntity getVariant() {
+        return variant;
+    }
+
+    public void setVariant(VariantEntity variant) {
+        this.variant = variant;
+    }
+
+    public CategoryEntity getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryEntity category) {
+        this.category = category;
     }
 }

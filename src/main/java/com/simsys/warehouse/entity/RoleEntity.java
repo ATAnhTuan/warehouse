@@ -1,44 +1,45 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-import java.util.List;
+
+import java.util.UUID;
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class RoleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "roleid")
-    private Integer roleId;
+    private Long id;
 
-    @Column(name = "rolename", length = 255, nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "uuid")
+    private UUID guid = UUID.randomUUID();
+
+    @Column(nullable = false)
     private String roleName;
 
-    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "role")
-    private List<UserEntity> users;
 
-    // Constructors
     public RoleEntity() {
     }
 
-    public RoleEntity(Integer roleId, String roleName, String description, List<UserEntity> users) {
-        this.roleId = roleId;
+    public RoleEntity(String roleName, String description) {
         this.roleName = roleName;
         this.description = description;
-        this.users = users;
     }
 
-    // Getters and Setters
-    public Integer getRoleId() {
-        return roleId;
+    // ===== Getters and Setters =====
+    public Long getId() {
+        return id;
     }
 
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public UUID getGuid() {
+        return guid;
+    }
+
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
     public String getRoleName() {
@@ -55,13 +56,5 @@ public class RoleEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<UserEntity> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserEntity> users) {
-        this.users = users;
     }
 }

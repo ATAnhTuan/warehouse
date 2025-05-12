@@ -1,66 +1,49 @@
 package com.simsys.warehouse.service;
 
-import com.simsys.warehouse.dto.PurchaseOrderDTO;
 import com.simsys.warehouse.entity.PurchaseOrderEntity;
-import com.simsys.warehouse.entity.SupplierEntity;
 import com.simsys.warehouse.mapper.PurchaseOrderMapper;
 import com.simsys.warehouse.repository.PurchaseOrderRepository;
-import com.simsys.warehouse.repository.SupplierRepository;
+import com.simsys.warehouse.requestdto.PurchaseOrderRequestDto;
+import com.simsys.warehouse.responsedto.PurchaseOrderResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
+
 @Service
 public class PurchaseOrderService {
 
     private final PurchaseOrderRepository purchaseOrderRepository;
-    private final SupplierRepository supplierRepository;
 
-    public PurchaseOrderService(PurchaseOrderRepository purchaseOrderRepository, SupplierRepository supplierRepository) {
+    public PurchaseOrderService(PurchaseOrderRepository purchaseOrderRepository) {
         this.purchaseOrderRepository = purchaseOrderRepository;
-        this.supplierRepository = supplierRepository;
     }
 
-    public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO dto) {
-        SupplierEntity supplierEntity = supplierRepository.findById(dto.getSupplierId())
-                .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + dto.getSupplierId()));
-
-        PurchaseOrderEntity entity = PurchaseOrderMapper.toEntity(dto, supplierEntity);
-        return PurchaseOrderMapper.toDTO(purchaseOrderRepository.save(entity));
+    // Tạo mới PurchaseOrder
+    public PurchaseOrderResponseDto create(PurchaseOrderRequestDto dto) {
+        PurchaseOrderEntity entity = PurchaseOrderMapper.toEntity(dto);
+        PurchaseOrderEntity saved = purchaseOrderRepository.save(entity);
+        return PurchaseOrderMapper.toResponseDto(saved);
     }
 
-    public List<PurchaseOrderDTO> getAllPurchaseOrders() {
+    // Lấy tất cả PurchaseOrders
+    public List<PurchaseOrderResponseDto> findAll() {
         return purchaseOrderRepository.findAll().stream()
-                .map(PurchaseOrderMapper::toDTO)
-                .collect(Collectors.toList());
+                .map(PurchaseOrderMapper::toResponseDto)
+                .toList();
     }
 
-    public PurchaseOrderDTO getPurchaseOrderById(Integer id) {
-        PurchaseOrderEntity entity = purchaseOrderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("PurchaseOrder not found with ID: " + id));
-        return PurchaseOrderMapper.toDTO(entity);
+    // Lấy PurchaseOrder theo GUID
+    public PurchaseOrderResponseDto findByGuid(UUID guid) {
+        PurchaseOrderEntity entity = purchaseOrderRepository.findByGuid(guid)
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found with GUID: " + guid));
+        return PurchaseOrderMapper.toResponseDto(entity);
     }
 
-    public PurchaseOrderDTO updatePurchaseOrder(Integer id, PurchaseOrderDTO dto) {
-        PurchaseOrderEntity existingEntity = purchaseOrderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("PurchaseOrder not found with ID: " + id));
-
-        SupplierEntity supplierEntity = supplierRepository.findById(dto.getSupplierId())
-                .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + dto.getSupplierId()));
-
-        existingEntity.setSupplierid(supplierEntity);
-        existingEntity.setQuantity(dto.getQuantity());
-        existingEntity.setNote(dto.getNote());
-        existingEntity.setTotalamount(dto.getTotalAmount());
-        existingEntity.setStatus(dto.getStatus());
-        existingEntity.setOrderdate(dto.getOrderDate());
-
-        return PurchaseOrderMapper.toDTO(purchaseOrderRepository.save(existingEntity));
-    }
-
-    public void deletePurchaseOrder(Integer id) {
-        PurchaseOrderEntity existingEntity = purchaseOrderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("PurchaseOrder not found with ID: " + id));
-        purchaseOrderRepository.delete(existingEntity);
+    // Xóa PurchaseOrder theo GUID
+    public void deleteByGuid(UUID guid) {
+        PurchaseOrderEntity entity = purchaseOrderRepository.findByGuid(guid)
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found with GUID: " + guid));
+        purchaseOrderRepository.delete(entity);
     }
 }

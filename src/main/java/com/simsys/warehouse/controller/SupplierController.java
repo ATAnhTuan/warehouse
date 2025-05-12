@@ -1,48 +1,45 @@
 package com.simsys.warehouse.controller;
 
-import com.simsys.warehouse.dto.SupplierDTO;
+import com.simsys.warehouse.requestdto.SupplierRequestDto;
+import com.simsys.warehouse.responsedto.SupplierResponseDto;
 import com.simsys.warehouse.service.SupplierService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/suppliers")
-@Tag(name = "Suppliers")
+@Tag(name = "Supplier")
 public class SupplierController {
 
-    private final SupplierService supplierService;
-
-    public SupplierController(SupplierService supplierService) {
-        this.supplierService = supplierService;
-    }
+    @Autowired
+    private SupplierService supplierService;
 
     @PostMapping
-    public ResponseEntity<SupplierDTO> createSupplier(@RequestBody SupplierDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(supplierService.createSupplier(dto));
+    public SupplierResponseDto create(@RequestBody SupplierRequestDto dto) {
+        return supplierService.create(dto);
     }
 
     @GetMapping
-    public ResponseEntity<List<SupplierDTO>> getAllSuppliers() {
-        return ResponseEntity.ok(supplierService.getAllSuppliers());
+    public List<SupplierResponseDto> getAll() {
+        return supplierService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SupplierDTO> getSupplierById(@PathVariable Integer id) {
-        return ResponseEntity.ok(supplierService.getSupplierById(id));
+    @GetMapping("/{guid}")
+    public SupplierResponseDto getByGuid(@PathVariable UUID guid) {
+        return supplierService.getByGuid(guid);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<SupplierDTO> updateSupplier(@PathVariable Integer id, @RequestBody SupplierDTO dto) {
-        return ResponseEntity.ok(supplierService.updateSupplier(id, dto));
+    @PutMapping("/{guid}")
+    public SupplierResponseDto update(@PathVariable UUID guid, @RequestBody SupplierRequestDto dto) {
+        return supplierService.update(guid, dto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSupplier(@PathVariable Integer id) {
-        supplierService.deleteSupplier(id);
-        return ResponseEntity.ok("Supplier has been successfully deleted.");
+    @DeleteMapping("/{guid}")
+    public void delete(@PathVariable UUID guid) {
+        supplierService.delete(guid);
     }
 }

@@ -1,105 +1,109 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table(name = "purchaseorder")
+@Table(name = "purchase_orders")
 public class PurchaseOrderEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "purchaseorder_id_gen")
-    @SequenceGenerator(name = "purchaseorder_id_gen", sequenceName = "purchaseorder_purchaseorderid_seq", allocationSize = 1)
-    @Column(name = "purchaseorderid", nullable = false)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private UUID guid = UUID.randomUUID();
+
+    @Column(name = "supplier_guid", nullable = false)
+    private UUID supplierGuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supplierid")
-    private SupplierEntity supplierid;
+    @JoinColumn(name = "supplier_guid", referencedColumnName = "guid", insertable = false, updatable = false)
+    private SupplierEntity supplier;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(nullable = false)
+    private String description;
 
-    @Column(name = "note", length = Integer.MAX_VALUE)
-    private String note;
+    @Column(nullable = false)
+    private Integer totalPrice;
 
-    @Column(name = "totalamount")
-    private BigDecimal totalamount;
+    @Column(nullable = false)
+    private String isActive;
 
-    @Column(name = "status")
-    private Boolean status;
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PurchaseOrderDetailEntity> purchaseOrderDetails = new ArrayList<>();
 
-    @Column(name = "orderdate")
-    private LocalDate orderdate;
+    public PurchaseOrderEntity() {
+    }
 
-    @OneToMany(mappedBy = "purchaseorderid")
-    private Set<PurchaseOrderDetailEntity> purchaseorderdetailEntities = new LinkedHashSet<>();
+    public PurchaseOrderEntity(UUID supplierGuid, String description, Integer totalPrice, String isActive) {
+        this.supplierGuid = supplierGuid;
+        this.description = description;
+        this.totalPrice = totalPrice;
+        this.isActive = isActive;
+    }
 
-    public Integer getId() {
+    // Getters and Setters
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public UUID getGuid() {
+        return guid;
     }
 
-    public SupplierEntity getSupplierid() {
-        return supplierid;
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
-    public void setSupplierid(SupplierEntity supplierid) {
-        this.supplierid = supplierid;
+    public UUID getSupplierGuid() {
+        return supplierGuid;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public void setSupplierGuid(UUID supplierGuid) {
+        this.supplierGuid = supplierGuid;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public SupplierEntity getSupplier() {
+        return supplier;
     }
 
-    public String getNote() {
-        return note;
+    public void setSupplier(SupplierEntity supplier) {
+        this.supplier = supplier;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public String getDescription() {
+        return description;
     }
 
-    public BigDecimal getTotalamount() {
-        return totalamount;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setTotalamount(BigDecimal totalamount) {
-        this.totalamount = totalamount;
+    public Integer getTotalPrice() {
+        return totalPrice;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public void setTotalPrice(Integer totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public String getIsActive() {
+        return isActive;
     }
 
-    public LocalDate getOrderdate() {
-        return orderdate;
+    public void setIsActive(String isActive) {
+        this.isActive = isActive;
     }
 
-    public void setOrderdate(LocalDate orderdate) {
-        this.orderdate = orderdate;
+    public List<PurchaseOrderDetailEntity> getPurchaseOrderDetails() {
+        return purchaseOrderDetails;
     }
 
-    public Set<PurchaseOrderDetailEntity> getPurchaseorderdetails() {
-        return purchaseorderdetailEntities;
+    public void setPurchaseOrderDetails(List<PurchaseOrderDetailEntity> purchaseOrderDetails) {
+        this.purchaseOrderDetails = purchaseOrderDetails;
     }
-
-    public void setPurchaseorderdetails(Set<PurchaseOrderDetailEntity> purchaseorderdetailEntities) {
-        this.purchaseorderdetailEntities = purchaseorderdetailEntities;
-    }
-
 }

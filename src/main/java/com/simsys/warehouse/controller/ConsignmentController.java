@@ -1,48 +1,45 @@
 package com.simsys.warehouse.controller;
 
-import com.simsys.warehouse.dto.ConsignmentDTO;
+import com.simsys.warehouse.requestdto.ConsignmentRequestDto;
+import com.simsys.warehouse.responsedto.ConsignmentResponseDto;
 import com.simsys.warehouse.service.ConsignmentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/consignments")
-@Tag(name = "Consignments")
+@Tag(name = "Consignment")
 public class ConsignmentController {
 
-    private final ConsignmentService consignmentService;
-
-    public ConsignmentController(ConsignmentService consignmentService) {
-        this.consignmentService = consignmentService;
-    }
+    @Autowired
+    private ConsignmentService service;
 
     @PostMapping
-    public ResponseEntity<ConsignmentDTO> createConsignment(@RequestBody ConsignmentDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(consignmentService.createConsignment(dto));
+    public ConsignmentResponseDto create(@RequestBody ConsignmentRequestDto dto) {
+        return service.create(dto);
     }
 
     @GetMapping
-    public ResponseEntity<List<ConsignmentDTO>> getAllConsignments() {
-        return ResponseEntity.ok(consignmentService.getAllConsignments());
+    public List<ConsignmentResponseDto> getAll() {
+        return service.getAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ConsignmentDTO> getConsignmentById(@PathVariable Integer id) {
-        return ResponseEntity.ok(consignmentService.getConsignmentById(id));
+    @GetMapping("/{guid}")
+    public ConsignmentResponseDto getByGuid(@PathVariable UUID guid) {
+        return service.getByGuid(guid);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ConsignmentDTO> updateConsignment(@PathVariable Integer id, @RequestBody ConsignmentDTO dto) {
-        return ResponseEntity.ok(consignmentService.updateConsignment(id, dto));
+    @PutMapping("/{guid}")
+    public ConsignmentResponseDto update(@PathVariable UUID guid, @RequestBody ConsignmentRequestDto dto) {
+        return service.update(guid, dto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteConsignment(@PathVariable Integer id) {
-        consignmentService.deleteConsignment(id);
-        return ResponseEntity.ok("Consignment has been successfully deleted.");
+    @DeleteMapping("/{guid}")
+    public void delete(@PathVariable UUID guid) {
+        service.deleteByGuid(guid);
     }
 }

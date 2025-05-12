@@ -3,5 +3,9 @@ package com.simsys.warehouse.repository;
 import com.simsys.warehouse.entity.TransferRequestEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TransferRequestRepository extends JpaRepository<TransferRequestEntity, Integer> {
+import java.util.Optional;
+import java.util.UUID;
+
+public interface TransferRequestRepository extends JpaRepository<TransferRequestEntity, Long> {
+    TransferRequestEntity findByGuid(UUID guid);
 }

@@ -1,65 +1,58 @@
 package com.simsys.warehouse.service;
 
-import com.simsys.warehouse.dto.SupplierPerformanceDTO;
 import com.simsys.warehouse.entity.SupplierPerformanceEntity;
-import com.simsys.warehouse.entity.ConsignmentEntity;
 import com.simsys.warehouse.mapper.SupplierPerformanceMapper;
 import com.simsys.warehouse.repository.SupplierPerformanceRepository;
-import com.simsys.warehouse.repository.ConsignmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.simsys.warehouse.requestdto.SupplierPerformanceRequestDto;
+import com.simsys.warehouse.responsedto.SupplierPerformanceResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class SupplierPerformanceService {
 
-    @Autowired
-    private SupplierPerformanceRepository repository;
+    private final SupplierPerformanceRepository repository;
 
-    @Autowired
-    private ConsignmentRepository consignmentRepository;
+    public SupplierPerformanceService(SupplierPerformanceRepository repository) {
+        this.repository = repository;
+    }
 
-    public List<SupplierPerformanceDTO> findAll() {
+    public SupplierPerformanceResponseDto create(SupplierPerformanceRequestDto dto) {
+        SupplierPerformanceEntity entity = SupplierPerformanceMapper.toEntity(dto);
+        return SupplierPerformanceMapper.toResponseDto(repository.save(entity));
+    }
+
+    public List<SupplierPerformanceResponseDto> getAll() {
         return repository.findAll().stream()
-                .map(SupplierPerformanceMapper::toDTO)
+                .map(SupplierPerformanceMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public SupplierPerformanceDTO findById(Integer id) {
-        return repository.findById(id)
-                .map(SupplierPerformanceMapper::toDTO)
-                .orElse(null);
+    public SupplierPerformanceResponseDto getByGuid(UUID guid) {
+        SupplierPerformanceEntity entity = repository.findByGuid(guid)
+                .orElseThrow(() -> new RuntimeException("SupplierPerformance not found"));
+        return SupplierPerformanceMapper.toResponseDto(entity);
     }
 
-    public SupplierPerformanceDTO create(SupplierPerformanceDTO dto) {
-        Optional<ConsignmentEntity> consignment = consignmentRepository.findById(dto.getConsignmentId());
-        if (consignment.isEmpty()) {
-            throw new IllegalArgumentException("Consignment not found");
-        }
-        SupplierPerformanceEntity entity = SupplierPerformanceMapper.toEntity(dto, consignment.get());
-        return SupplierPerformanceMapper.toDTO(repository.save(entity));
+    public void deleteByGuid(UUID guid) {
+        repository.deleteByGuid(guid);
     }
 
-    public SupplierPerformanceDTO update(Integer id, SupplierPerformanceDTO dto) {
-        SupplierPerformanceEntity entity = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Performance not found"));
-        Optional<ConsignmentEntity> consignment = consignmentRepository.findById(dto.getConsignmentId());
-        if (consignment.isEmpty()) {
-            throw new IllegalArgumentException("Consignment not found");
-        }
-        entity.setOntimedeliveryrate(dto.getOnTimeDeliveryRate());
-        entity.setProductqualityrating(dto.getProductQualityRating());
-        entity.setNotes(dto.getNotes());
-        entity.setRulescompletionrate(dto.getRulesCompletionRate());
-        entity.setLastevaluated(dto.getLastEvaluated());
-        entity.setConsignmentid(consignment.get());
-        entity.setStatus(dto.getStatus());
-        return SupplierPerformanceMapper.toDTO(repository.save(entity));
-    }
+    public SupplierPerformanceResponseDto update(UUID guid, SupplierPerformanceRequestDto dto) {
+        SupplierPerformanceEntity entity = repository.findByGuid(guid)
+                .orElseThrow(() -> new RuntimeException("SupplierPerformance not found"));
 
-    public void delete(Integer id) {
-        repository.deleteById(id);
+        entity.setSupplierGuid(dto.getSupplierGuid());
+        entity.setConsignmentGuid(dto.getConsignmentGuid());
+        entity.setUserGuid(dto.getUserGuid());
+        entity.setOnTimeDeliveryRate(dto.getOnTimeDeliveryRate());
+        entity.setProductQualityRating(dto.getProductQualityRating());
+        entity.setSupplyCompletionRate(dto.getSupplyCompletionRate());
+        entity.setDescription(dto.getDescription());
+
+        return SupplierPerformanceMapper.toResponseDto(repository.save(entity));
     }
 }

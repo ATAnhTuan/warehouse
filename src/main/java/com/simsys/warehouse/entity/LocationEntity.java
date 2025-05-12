@@ -1,59 +1,62 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.UUID;
 
 @Entity
-@Table(name = "location")
+@Table(name = "locations")
 public class LocationEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_id_gen")
-    @SequenceGenerator(name = "location_id_gen", sequenceName = "location_locationid_seq", allocationSize = 1)
-    @Column(name = "locationid", nullable = false)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Size(max = 255)
-    @Column(name = "locationname")
-    private String locationname;
+    @Column(nullable = false, unique = true, updatable = false)
+    private UUID guid;
 
-    @Column(name = "address", length = Integer.MAX_VALUE)
-    private String address;
+    @Column(name = "location_name", nullable = false)
+    private String locationName;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @Size(max = 20)
-    @Column(name = "phonenumber", length = 20)
-    private String phonenumber;
+    @Column(name = "inventory_guid", nullable = false)
+    private UUID inventoryGuid;
 
-    @OneToMany(mappedBy = "locationid")
-    private Set<InventoryEntity> inventories = new LinkedHashSet<>();
+    public LocationEntity() {
+        this.guid = UUID.randomUUID();
+    }
 
-    public Integer getId() {
+    public LocationEntity(String locationName, String description, UUID inventoryGuid) {
+        this.guid = UUID.randomUUID();
+        this.locationName = locationName;
+        this.description = description;
+        this.inventoryGuid = inventoryGuid;
+    }
+
+    // Getters & Setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getLocationname() {
-        return locationname;
+    public UUID getGuid() {
+        return guid;
     }
 
-    public void setLocationname(String locationname) {
-        this.locationname = locationname;
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
-    public String getAddress() {
-        return address;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
     public String getDescription() {
@@ -64,20 +67,11 @@ public class LocationEntity {
         this.description = description;
     }
 
-    public String getPhonenumber() {
-        return phonenumber;
+    public UUID getInventoryGuid() {
+        return inventoryGuid;
     }
 
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
+    public void setInventoryGuid(UUID inventoryGuid) {
+        this.inventoryGuid = inventoryGuid;
     }
-
-    public Set<InventoryEntity> getInventories() {
-        return inventories;
-    }
-
-    public void setInventories(Set<InventoryEntity> inventories) {
-        this.inventories = inventories;
-    }
-
 }

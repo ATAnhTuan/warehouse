@@ -1,51 +1,56 @@
 package com.simsys.warehouse.service;
 
-import com.simsys.warehouse.dto.RoleDTO;
 import com.simsys.warehouse.entity.RoleEntity;
 import com.simsys.warehouse.mapper.RoleMapper;
 import com.simsys.warehouse.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.simsys.warehouse.requestdto.RoleRequestDto;
+import com.simsys.warehouse.responsedto.RoleResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class RoleService {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    public List<RoleDTO> findAll() {
-        return roleRepository.findAll().stream()
-                .map(RoleMapper::toDTO)
-                .collect(Collectors.toList());
+    public RoleService(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
-    public RoleDTO findById(Integer id) {
-        return roleRepository.findById(id)
-                .map(RoleMapper::toDTO)
-                .orElse(null);
+    public RoleResponseDto create(RoleRequestDto dto) {
+        RoleEntity role = RoleMapper.toEntity(dto);
+        RoleEntity saved = roleRepository.save(role);
+        return RoleMapper.toResponseDto(saved);
     }
 
-    public RoleDTO create(RoleDTO roleDTO) {
-        RoleEntity entity = RoleMapper.toEntity(roleDTO);
-        RoleEntity savedEntity = roleRepository.save(entity);
-        return RoleMapper.toDTO(savedEntity);
+    public List<RoleResponseDto> findAll() {
+        return RoleMapper.toResponseDtoList(roleRepository.findAll());
     }
 
-    public RoleDTO update(Integer id, RoleDTO roleDTO) {
-        RoleEntity existingEntity = roleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found"));
-
-        existingEntity.setRoleName(roleDTO.getRoleName());
-        existingEntity.setDescription(roleDTO.getDescription());
-
-        RoleEntity updatedEntity = roleRepository.save(existingEntity);
-        return RoleMapper.toDTO(updatedEntity);
+    public Optional<RoleResponseDto> findById(Long id) {
+        return roleRepository.findById(id).map(RoleMapper::toResponseDto);
     }
 
-    public void delete(Integer id) {
-        roleRepository.deleteById(id);
+    public Optional<RoleResponseDto> findByGuid(UUID guid) {
+        return roleRepository.findByGuid(guid).map(RoleMapper::toResponseDto);
+    }
+
+    public Optional<RoleResponseDto> update(Long id, RoleRequestDto dto) {
+        return roleRepository.findById(id).map(existing -> {
+            existing.setRoleName(dto.getRoleName());
+            existing.setDescription(dto.getDescription());
+            return RoleMapper.toResponseDto(roleRepository.save(existing));
+        });
+    }
+
+    public boolean delete(Long id) {
+        if (roleRepository.existsById(id)) {
+            roleRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

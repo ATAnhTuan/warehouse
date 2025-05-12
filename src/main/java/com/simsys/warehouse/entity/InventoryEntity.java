@@ -1,48 +1,56 @@
 package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
-import org.hibernate.annotations.ColumnDefault;
+
+import java.util.UUID;
 
 @Entity
-@Table(name = "inventory")
+@Table(name = "inventories")
 public class InventoryEntity {
-    @Id
-    @ColumnDefault("nextval('inventory_inventoryid_seq')")
-    @Column(name = "inventoryid", nullable = false)
-    private Integer id;
 
-    @Size(max = 255)
-    @Column(name = "name")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private UUID guid = UUID.randomUUID();  // Tự động khởi tạo khi tạo mới
+
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "address", length = Integer.MAX_VALUE)
-    private String address;
-
-    @Column(name = "quantity")
-    private Integer quantity;
-
-    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "locationid")
-    private com.simsys.warehouse.entity.LocationEntity locationid;
+    private Integer quantity;
 
-    public com.simsys.warehouse.entity.LocationEntity getLocationid() {
-        return locationid;
+    @Column(name = "user_guid", nullable = false)
+    private UUID userGuid;
+
+    public InventoryEntity() {
     }
 
-    public void setLocationid(com.simsys.warehouse.entity.LocationEntity locationid) {
-        this.locationid = locationid;
+    public InventoryEntity(String name, String description, Integer quantity, UUID userGuid) {
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.userGuid = userGuid;
+        this.guid = UUID.randomUUID(); // Đảm bảo tạo guid mới trong constructor
     }
 
-    public Integer getId() {
+    // ===== Getters and Setters =====
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public UUID getGuid() {
+        return guid;
+    }
+
+    public void setGuid(UUID guid) {
+        this.guid = guid;
     }
 
     public String getName() {
@@ -53,12 +61,12 @@ public class InventoryEntity {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getQuantity() {
@@ -69,12 +77,11 @@ public class InventoryEntity {
         this.quantity = quantity;
     }
 
-    public String getDescription() {
-        return description;
+    public UUID getUserGuid() {
+        return userGuid;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setUserGuid(UUID userGuid) {
+        this.userGuid = userGuid;
     }
-
 }
