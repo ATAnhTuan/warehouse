@@ -21,7 +21,7 @@ public class UsersEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true,updatable = false)
     private String email;
 
     @Column(name = "contact_info")
@@ -33,22 +33,42 @@ public class UsersEntity {
     @Column(name = "role_guid", nullable = false)
     private UUID roleGuid;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_guid", referencedColumnName = "guid", insertable = false, updatable = false)
+    private RoleEntity role;
+
+
     // Constructors
     public UsersEntity() {
         this.guid = UUID.randomUUID(); // Default GUID generation
     }
 
-    public UsersEntity(String username, String password, String email, String contactInfo, Boolean isActive, UUID roleGuid) {
+    public UsersEntity(String username, UUID guid, String password, String email, String contactInfo, Boolean isActive, UUID roleGuid, RoleEntity role) {
         this.username = username;
-        this.guid = UUID.randomUUID();
+        this.guid = guid;
         this.password = password;
         this.email = email;
         this.contactInfo = contactInfo;
         this.isActive = isActive;
         this.roleGuid = roleGuid;
+        this.role = role;
     }
 
-    // Getters & Setters
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public RoleEntity getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEntity role) {
+        this.role = role;
+    }
     public Long getId() {
         return id;
     }

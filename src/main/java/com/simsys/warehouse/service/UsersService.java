@@ -5,6 +5,7 @@ import com.simsys.warehouse.mapper.UsersMapper;
 import com.simsys.warehouse.repository.UsersRepository;
 import com.simsys.warehouse.requestdto.UsersRequestDto;
 import com.simsys.warehouse.responsedto.UsersResponseDto;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +15,16 @@ import java.util.Optional;
 public class UsersService {
 
     private final UsersRepository usersRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsersService(UsersRepository usersRepository) {
+    public UsersService(UsersRepository usersRepository, PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UsersResponseDto create(UsersRequestDto dto) {
         UsersEntity user = UsersMapper.toEntity(dto);
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         UsersEntity saved = usersRepository.save(user);
         return UsersMapper.toResponseDto(saved);
     }
@@ -36,7 +40,7 @@ public class UsersService {
     public Optional<UsersResponseDto> update(Long id, UsersRequestDto dto) {
         return usersRepository.findById(id).map(existing -> {
             existing.setUsername(dto.getUsername());
-            existing.setPassword(dto.getPassword());
+            existing.setPassword(passwordEncoder.encode(dto.getPassword()));
             existing.setEmail(dto.getEmail());
             existing.setContactInfo(dto.getContactInfo());
             existing.setIsActive(dto.getActive());

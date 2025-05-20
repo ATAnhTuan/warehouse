@@ -15,7 +15,7 @@ public class RoleEntity {
     @Column(nullable = false, unique = true, columnDefinition = "uuid")
     private UUID guid = UUID.randomUUID();
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String roleName;
 
     private String description;
