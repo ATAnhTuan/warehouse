@@ -37,6 +37,11 @@ public class UsersService {
         return usersRepository.findById(id).map(UsersMapper::toResponseDto);
     }
 
+    public Optional<UsersResponseDto> findByUsername(String username) {
+        return usersRepository.findByUsername(username)
+                .map(UsersMapper::toResponseDto);
+    }
+
     public Optional<UsersResponseDto> update(Long id, UsersRequestDto dto) {
         return usersRepository.findById(id).map(existing -> {
             existing.setUsername(dto.getUsername());

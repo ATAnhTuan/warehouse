@@ -32,19 +32,19 @@ public class InventoryController {
         return ResponseEntity.ok(inventoryService.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{guid}")
     public ResponseEntity<InventoryResponseDto> getByGuid(@PathVariable UUID guid) {
         Optional<InventoryResponseDto> response = inventoryService.findByGuid(guid);
         return response.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{guid}")
     public ResponseEntity<InventoryResponseDto> updateByGuid(@PathVariable UUID guid, @RequestBody InventoryRequestDto dto) {
         Optional<InventoryResponseDto> response = inventoryService.updateByGuid(guid, dto);
         return response.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{guid}")
     public ResponseEntity<Void> delete(@PathVariable UUID guid) {
         boolean deleted = inventoryService.deleteByGuid(guid);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();

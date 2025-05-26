@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -55,4 +56,20 @@ public class ProductController {
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/by-category/{categoryGuid}")
+    public ResponseEntity<List<ProductResponseDto>> findByCategoryGuid(@PathVariable UUID categoryGuid) {
+        return ResponseEntity.ok(productService.findByCategoryGuid(categoryGuid));
+    }
+
+    @GetMapping("/by-name")
+    public ResponseEntity<List<ProductResponseDto>> findByName(@RequestParam String name) {
+        return ResponseEntity.ok(productService.findByProductName(name));
+    }
+
+    @GetMapping("/by-variant/{variantGuid}")
+    public ResponseEntity<List<ProductResponseDto>> findByVariantGuid(@PathVariable UUID variantGuid) {
+        return ResponseEntity.ok(productService.findByVariantGuid(variantGuid));
+    }
+
 }

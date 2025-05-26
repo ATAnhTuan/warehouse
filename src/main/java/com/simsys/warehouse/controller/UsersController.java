@@ -44,6 +44,13 @@ public class UsersController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/username/{username}")
+    public ResponseEntity<UsersResponseDto> findByUsername(@PathVariable String username) {
+        return usersService.findByUsername(username)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         return usersService.delete(id)

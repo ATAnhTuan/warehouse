@@ -5,6 +5,7 @@ import com.simsys.warehouse.mapper.SupplierMapper;
 import com.simsys.warehouse.repository.SupplierRepository;
 import com.simsys.warehouse.requestdto.SupplierRequestDto;
 import com.simsys.warehouse.responsedto.SupplierResponseDto;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,7 @@ public class SupplierService {
         return SupplierMapper.toResponseDto(supplierRepository.save(entity));
     }
 
+    @Transactional
     public void delete(UUID guid) {
         supplierRepository.deleteByGuid(guid);
     }

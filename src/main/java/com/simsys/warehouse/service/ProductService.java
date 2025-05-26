@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -71,4 +72,17 @@ public class ProductService {
         }
         return false;
     }
+
+    public List<ProductResponseDto> findByCategoryGuid(UUID categoryGuid) {
+        return ProductMapper.toResponseDtoList(productRepository.findByCategoryGuid(categoryGuid));
+    }
+
+    public List<ProductResponseDto> findByProductName(String name) {
+        return ProductMapper.toResponseDtoList(productRepository.findByNameContainingIgnoreCase(name));
+    }
+
+    public List<ProductResponseDto> findByVariantGuid(UUID variantGuid) {
+        return ProductMapper.toResponseDtoList(productRepository.findByVariant_Guid(variantGuid));
+    }
+
 }
