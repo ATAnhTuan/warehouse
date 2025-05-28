@@ -45,7 +45,6 @@ public class UsersService {
     public Optional<UsersResponseDto> update(Long id, UsersRequestDto dto) {
         return usersRepository.findById(id).map(existing -> {
             existing.setUsername(dto.getUsername());
-            existing.setPassword(passwordEncoder.encode(dto.getPassword()));
             existing.setEmail(dto.getEmail());
             existing.setContactInfo(dto.getContactInfo());
             existing.setIsActive(dto.getActive());
@@ -53,6 +52,8 @@ public class UsersService {
             return UsersMapper.toResponseDto(usersRepository.save(existing));
         });
     }
+
+
 
     public boolean delete(Long id) {
         if (usersRepository.existsById(id)) {
