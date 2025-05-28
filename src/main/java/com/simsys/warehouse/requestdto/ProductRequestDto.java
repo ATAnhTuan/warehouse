@@ -7,11 +7,12 @@ public class ProductRequestDto {
     private Integer quantity;
     private String description;
     private String status;
+    private String image; // Thêm image
     private UUID categoryGuid;
     private UUID variantGuid;
+    private UUID consignmentGuid; // Thêm consignmentGuid
 
     // Getters & Setters
-
     public String getName() {
         return name;
     }
@@ -58,5 +59,21 @@ public class ProductRequestDto {
 
     public void setVariantGuid(UUID variantGuid) {
         this.variantGuid = variantGuid;
+    }
+
+    public UUID getConsignmentGuid() {
+        return consignmentGuid;
+    }
+
+    public void setConsignmentGuid(UUID consignmentGuid) {
+        this.consignmentGuid = consignmentGuid;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

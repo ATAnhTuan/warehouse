@@ -33,6 +33,11 @@ public class ConsignmentController {
         return service.getByGuid(guid);
     }
 
+    @GetMapping("/by-supplier/{supplierGuid}")
+    public List<ConsignmentResponseDto> findBySupplierGuid(@PathVariable UUID supplierGuid) {
+        return service.findBySupplierGuid(supplierGuid);
+    }
+
     @PutMapping("/{guid}")
     public ConsignmentResponseDto update(@PathVariable UUID guid, @RequestBody ConsignmentRequestDto dto) {
         return service.update(guid, dto);

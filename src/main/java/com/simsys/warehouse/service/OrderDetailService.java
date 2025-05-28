@@ -28,6 +28,12 @@ public class OrderDetailService {
         return OrderDetailMapper.toResponseDtoList(entities);
     }
 
+    public List<OrderDetailResponseDto> findByProductGuid(UUID productGuid) {
+        List<OrderDetailEntity> entities = orderDetailRepository.findAllByProductGuid((productGuid));
+        return OrderDetailMapper.toResponseDtoList(entities);
+    }
+
+
     public OrderDetailResponseDto getByGuid(UUID guid) {
         OrderDetailEntity entity = orderDetailRepository.findByGuid(guid)
                 .orElseThrow(() -> new RuntimeException("Order detail not found"));

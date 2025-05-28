@@ -16,7 +16,7 @@ public class ConsignmentEntity {
     @Column(nullable = false, unique = true)
     private String sku;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private UUID guid = UUID.randomUUID();
 
     @Column(nullable = false)
@@ -30,7 +30,6 @@ public class ConsignmentEntity {
 
     private LocalDateTime createDate = LocalDateTime.now();
 
-    // Foreign key thủ công liên kết với Supplier
     @Column(nullable = false)
     private UUID supplierGuid;
 

@@ -12,4 +12,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, 
     Optional<OrderDetailEntity> findByGuid(UUID guid);
     void deleteByGuid(UUID guid);
     List<OrderDetailEntity> findAllByOrderGuid(UUID orderGuid);
+
+    List<OrderDetailEntity> findAllByProductGuid(UUID productGuid);
 }

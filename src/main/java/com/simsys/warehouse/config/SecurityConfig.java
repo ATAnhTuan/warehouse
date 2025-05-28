@@ -33,9 +33,10 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Public
-                        .requestMatchers("/api/user/**").permitAll() // Public
-                        .requestMatchers(HttpMethod.POST, "/api/roles/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/users/**").hasAnyAuthority("ADMIN", "MANAGE")
+                        .requestMatchers("/api/users/**").permitAll() // Public
+//                        .requestMatchers(HttpMethod.POST, "/api/roles/**").hasAnyAuthority("ADMIN")
+//                        .requestMatchers(HttpMethod.POST, "/api/users/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority("ADMIN","MANAGER")
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

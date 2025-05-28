@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CategoryService {
@@ -49,6 +50,12 @@ public class CategoryService {
             return true;
         }
         return false;
+    }
+
+    private UUID getCategoryGuidById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"))
+                .getGuid();
     }
 
     public List<CategoryEntity> findAllEntities() {

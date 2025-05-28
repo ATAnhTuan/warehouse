@@ -8,23 +8,27 @@ public class ProductResponseDto {
     private final Integer quantity;
     private final String description;
     private final String status;
+    private final String image; // Thêm image
     private final UUID guid;
     private final UUID categoryGuid;
     private final UUID variantGuid;
+    private final UUID consignmentGuid; // Thêm consignmentGuid
     private final CategoryResponseDto category;
     private final VariantResponseDto variant;
 
     public ProductResponseDto(Long id, String name, Integer quantity, String description, String status,
-                              UUID guid, UUID categoryGuid, UUID variantGuid,
+                              String image, UUID guid, UUID categoryGuid, UUID variantGuid, UUID consignmentGuid,
                               CategoryResponseDto category, VariantResponseDto variant) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.description = description;
         this.status = status;
+        this.image = image;
         this.guid = guid;
         this.categoryGuid = categoryGuid;
         this.variantGuid = variantGuid;
+        this.consignmentGuid = consignmentGuid;
         this.category = category;
         this.variant = variant;
     }
@@ -51,6 +55,10 @@ public class ProductResponseDto {
         return status;
     }
 
+    public String getImage() {
+        return image;
+    }
+
     public UUID getGuid() {
         return guid;
     }
@@ -61,6 +69,10 @@ public class ProductResponseDto {
 
     public UUID getVariantGuid() {
         return variantGuid;
+    }
+
+    public UUID getConsignmentGuid() {
+        return consignmentGuid;
     }
 
     public CategoryResponseDto getCategory() {

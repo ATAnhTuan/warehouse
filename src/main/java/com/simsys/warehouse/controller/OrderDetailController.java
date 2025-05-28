@@ -30,6 +30,11 @@ public class OrderDetailController {
         return orderDetailService.getAll();
     }
 
+    @GetMapping("/product/{productGuid}")
+    public List<OrderDetailResponseDto> getOrderDetailsByProductGuid(@PathVariable UUID productGuid) {
+        return orderDetailService.findByProductGuid(productGuid);
+    }
+
     @GetMapping("/{guid}")
     public OrderDetailResponseDto getOrderDetailByGuid(@PathVariable UUID guid) {
         return orderDetailService.getByGuid(guid);

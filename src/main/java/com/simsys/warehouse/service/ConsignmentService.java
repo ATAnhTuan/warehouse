@@ -53,4 +53,12 @@ public class ConsignmentService {
 
         return ConsignmentMapper.toResponseDto(repository.save(entity));
     }
+    public List<ConsignmentResponseDto> findBySupplierGuid(UUID supplierGuid) {
+        List<ConsignmentEntity> entities = repository.findAllBySupplierGuid((supplierGuid));
+        return entities.stream()
+                .map(ConsignmentMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+
 }

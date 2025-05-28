@@ -6,6 +6,7 @@ import com.simsys.warehouse.responsedto.OrderResponseDto;
 import com.simsys.warehouse.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,12 @@ public class OrderController {
     @PutMapping("/{guid}")
     public OrderResponseDto updateOrder(@PathVariable UUID guid, @RequestBody OrderRequestDto dto) {
         return orderService.updateOrder(guid, dto);
+    }
+
+    @GetMapping("/customer/{customerGuid}")
+    public ResponseEntity<List<OrderResponseDto>> getOrdersByCustomerGuid(@PathVariable UUID customerGuid) {
+        List<OrderResponseDto> orders = orderService.getOrdersByCustomerGuid(customerGuid);
+        return ResponseEntity.ok(orders);
     }
 
     @DeleteMapping("/{guid}")

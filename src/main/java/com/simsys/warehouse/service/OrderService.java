@@ -31,6 +31,13 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public List<OrderResponseDto> getOrdersByCustomerGuid(UUID customerGuid) {
+        List<OrderEntity> orders = orderRepository.findAllByCustomerGuid((customerGuid));
+        return orders.stream()
+                .map(OrderMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
     public OrderResponseDto getByGuid(UUID guid) {
         OrderEntity entity = orderRepository.findByGuid(guid)
                 .orElseThrow(() -> new RuntimeException("Order not found"));

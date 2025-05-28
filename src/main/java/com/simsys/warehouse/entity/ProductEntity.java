@@ -20,6 +20,9 @@ public class ProductEntity {
 
     private String status;
 
+    @Column(name = "image")
+    private String image;
+
     @Column(nullable = false, unique = true)
     private UUID guid = UUID.randomUUID();
 
@@ -37,10 +40,22 @@ public class ProductEntity {
     @JoinColumn(name = "category_guid", referencedColumnName = "guid", insertable = false, updatable = false)
     private CategoryEntity category;
 
+
+    @Column(name = "consignment_guid")
+    private UUID consignmentGuid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consignment_guid", referencedColumnName = "guid", insertable = false, updatable = false)
+    private ConsignmentEntity consignment;
+
+
     public ProductEntity() {
     }
 
-    public ProductEntity(String name, Integer quantity, String description, String status, UUID guid, UUID categoryGuid, UUID variantGuid, VariantEntity variant, CategoryEntity category) {
+    public ProductEntity(String name, Integer quantity, String description, String status, UUID guid,
+                         UUID categoryGuid, UUID variantGuid, UUID consignmentGuid,
+                         VariantEntity variant, CategoryEntity category, ConsignmentEntity consignment,
+                         String image) {
         this.name = name;
         this.quantity = quantity;
         this.description = description;
@@ -48,11 +63,40 @@ public class ProductEntity {
         this.guid = guid;
         this.categoryGuid = categoryGuid;
         this.variantGuid = variantGuid;
+        this.consignmentGuid = consignmentGuid;
         this.variant = variant;
         this.category = category;
+        this.consignment = consignment;
+        this.image = image;
     }
-// Getters and Setters
 
+
+
+
+// Getters and Setters
+public String getImage() {
+    return image;
+}
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public UUID getConsignmentGuid() {
+        return consignmentGuid;
+    }
+
+    public void setConsignmentGuid(UUID consignmentGuid) {
+        this.consignmentGuid = consignmentGuid;
+    }
+
+    public ConsignmentEntity getConsignment() {
+        return consignment;
+    }
+
+    public void setConsignment(ConsignmentEntity consignment) {
+        this.consignment = consignment;
+    }
 
     public Long getId() {
         return id;
