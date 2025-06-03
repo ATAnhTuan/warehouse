@@ -4,6 +4,7 @@ import com.simsys.warehouse.requestdto.LocationRequestDto;
 import com.simsys.warehouse.responsedto.LocationResponseDto;
 import com.simsys.warehouse.service.LocationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class LocationController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    @Transactional
     @DeleteMapping("/{guid}")
     public ResponseEntity<Void> delete(@PathVariable UUID guid) {
         if (locationService.deleteByGuid(guid)) {

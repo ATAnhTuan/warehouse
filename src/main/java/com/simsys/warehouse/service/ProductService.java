@@ -52,7 +52,7 @@ public class ProductService {
                     existing.setDescription(dto.getDescription());
                     existing.setStatus(dto.getStatus());
                     existing.setCategoryGuid(dto.getCategoryGuid());
-
+                    existing.setImage(dto.getImage());
                     if (dto.getVariantGuid() != null) {
                         VariantEntity variant = variantRepository.findByGuid(dto.getVariantGuid())
                                 .orElseThrow(() -> new RuntimeException("Variant not found with guid: " + dto.getVariantGuid()));

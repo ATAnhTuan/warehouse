@@ -4,6 +4,7 @@ import com.simsys.warehouse.requestdto.SupplierRequestDto;
 import com.simsys.warehouse.responsedto.SupplierResponseDto;
 import com.simsys.warehouse.service.SupplierService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class SupplierController {
     public SupplierResponseDto update(@PathVariable UUID guid, @RequestBody SupplierRequestDto dto) {
         return supplierService.update(guid, dto);
     }
-
+    @Transactional
     @DeleteMapping("/{guid}")
     public void delete(@PathVariable UUID guid) {
         supplierService.delete(guid);

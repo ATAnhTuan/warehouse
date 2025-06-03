@@ -5,6 +5,7 @@ import com.simsys.warehouse.requestdto.OrderRequestDto;
 import com.simsys.warehouse.responsedto.OrderResponseDto;
 import com.simsys.warehouse.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class OrderController {
         List<OrderResponseDto> orders = orderService.getOrdersByCustomerGuid(customerGuid);
         return ResponseEntity.ok(orders);
     }
-
+    @Transactional
     @DeleteMapping("/{guid}")
     public void deleteOrder(@PathVariable UUID guid) {
         orderService.deleteByGuid(guid);

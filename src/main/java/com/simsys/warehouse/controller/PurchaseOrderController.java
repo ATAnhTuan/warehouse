@@ -4,6 +4,7 @@ import com.simsys.warehouse.requestdto.PurchaseOrderRequestDto;
 import com.simsys.warehouse.responsedto.PurchaseOrderResponseDto;
 import com.simsys.warehouse.service.PurchaseOrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class PurchaseOrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // Xóa PurchaseOrder theo GUID
+    @Transactional
     @DeleteMapping("/{guid}")
     public ResponseEntity<Void> deleteByGuid(@PathVariable UUID guid) {
         purchaseOrderService.deleteByGuid(guid);

@@ -4,6 +4,7 @@ import com.simsys.warehouse.requestdto.SupplierPerformanceRequestDto;
 import com.simsys.warehouse.responsedto.SupplierPerformanceResponseDto;
 import com.simsys.warehouse.service.SupplierPerformanceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class SupplierPerformanceController {
     public SupplierPerformanceResponseDto update(@PathVariable UUID guid, @RequestBody SupplierPerformanceRequestDto dto) {
         return service.update(guid, dto);
     }
-
+    @Transactional
     @DeleteMapping("/{guid}")
     public void delete(@PathVariable UUID guid) {
         service.deleteByGuid(guid);

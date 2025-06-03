@@ -4,6 +4,7 @@ import com.simsys.warehouse.requestdto.InventoryRequestDto;
 import com.simsys.warehouse.responsedto.InventoryResponseDto;
 import com.simsys.warehouse.service.InventoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class InventoryController {
         Optional<InventoryResponseDto> response = inventoryService.updateByGuid(guid, dto);
         return response.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
-
+    @Transactional
     @DeleteMapping("/{guid}")
     public ResponseEntity<Void> delete(@PathVariable UUID guid) {
         boolean deleted = inventoryService.deleteByGuid(guid);

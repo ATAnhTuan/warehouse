@@ -4,6 +4,7 @@ import com.simsys.warehouse.requestdto.ConsignmentRequestDto;
 import com.simsys.warehouse.responsedto.ConsignmentResponseDto;
 import com.simsys.warehouse.service.ConsignmentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +43,7 @@ public class ConsignmentController {
     public ConsignmentResponseDto update(@PathVariable UUID guid, @RequestBody ConsignmentRequestDto dto) {
         return service.update(guid, dto);
     }
-
+    @Transactional
     @DeleteMapping("/{guid}")
     public void delete(@PathVariable UUID guid) {
         service.deleteByGuid(guid);

@@ -4,6 +4,7 @@ import com.simsys.warehouse.requestdto.TransferRequestRequestDto;
 import com.simsys.warehouse.responsedto.TransferRequestResponseDto;
 import com.simsys.warehouse.service.TransferRequestService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class TransferRequestController {
         TransferRequestResponseDto response = service.update(guid, dto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @Transactional
     @DeleteMapping("/{guid}")
     public ResponseEntity<Void> delete(@PathVariable UUID guid) {
         service.delete(guid);
