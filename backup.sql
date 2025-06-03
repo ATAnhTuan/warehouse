@@ -633,6 +633,7 @@ COPY public.categories (id, guid, description, name) FROM stdin;
 --
 
 COPY public.consignments (price, quantity, create_date, id, guid, purchase_order_guid, supplier_guid, description, name, sku) FROM stdin;
+10.00	10	2025-06-03 22:56:26.913521	3	15a8b639-9f65-4273-a435-ceaba0203151	de8238e4-8af4-458d-8ee5-75824f0338fe	b16e390e-23e2-447c-a94c-c472c253c847	hang hoa	hang hoa	test
 \.
 
 
@@ -641,6 +642,8 @@ COPY public.consignments (price, quantity, create_date, id, guid, purchase_order
 --
 
 COPY public.customers (id, guid, address, bank_card, email, name, phone) FROM stdin;
+1	18d32839-6e07-46f6-ad1d-fad41c7f5e2e	asdfadf	4234324234	vantai@gmail.com	Van tai 	12312321
+2	13172b93-5fe3-48f2-8c36-c4029aeef39f	asdfadf	4234324234	taivan@gmail.com	Van tai van	12312321
 \.
 
 
@@ -691,6 +694,10 @@ COPY public.products (quantity, id, category_guid, consignment_guid, guid, varia
 --
 
 COPY public.purchase_order_details (quantity, id, guid, product_guid, purchase_order_guid) FROM stdin;
+10	1	6e8b1652-89c3-489d-8aa5-896e6961a0c1	a6386522-d30e-4167-a4b3-ccec258cc5f7	de8238e4-8af4-458d-8ee5-75824f0338fe
+10	2	d23e989a-aaa3-4309-8bc8-843d63bdc10c	7f28e602-6afa-4428-913f-488560f75fb3	3f38d75c-249f-4555-a37c-b7b1b8fb6893
+12	3	c1226c03-1cf8-423a-926d-4eb25ce8b443	7f28e602-6afa-4428-913f-488560f75fb3	3f38d75c-249f-4555-a37c-b7b1b8fb6893
+5	4	1e7dd61a-ab88-46b2-99f2-4149e46eb801	7f28e602-6afa-4428-913f-488560f75fb3	3f38d75c-249f-4555-a37c-b7b1b8fb6893
 \.
 
 
@@ -699,6 +706,8 @@ COPY public.purchase_order_details (quantity, id, guid, product_guid, purchase_o
 --
 
 COPY public.purchase_orders (total_price, id, guid, supplier_guid, description, is_active) FROM stdin;
+100000	1	de8238e4-8af4-458d-8ee5-75824f0338fe	f477101a-3b8b-40ac-8ea7-5e154552e370	đồ của adidas	active
+100000	2	3f38d75c-249f-4555-a37c-b7b1b8fb6893	f477101a-3b8b-40ac-8ea7-5e154552e370	đồ của adidas	active
 \.
 
 
@@ -710,6 +719,7 @@ COPY public.roles (id, guid, description, role_name) FROM stdin;
 1	371192fd-85e8-417c-9655-2e24439497b9	ADMIN	ADMIN
 2	3fa4881c-211a-4e1b-9669-c0713f26167f	MANAGER	MANAGER
 3	df0071d3-ebe4-449a-9c37-deb5d4bd6d1a	USER	USER
+4	47af06cc-60c6-4bfd-b4b8-e9e6126b1e84	customer	customer
 \.
 
 
@@ -742,6 +752,8 @@ COPY public.supplier_performance (on_time_delivery_rate, product_quality_rating,
 --
 
 COPY public.suppliers (id, guid, address, email, is_active, name, phone) FROM stdin;
+1	b16e390e-23e2-447c-a94c-c472c253c847	đường nike	nike@gmail.com	active	nhân viên nike	123123123
+2	f477101a-3b8b-40ac-8ea7-5e154552e370	đường adidas	adidas@gmail.com	active	nhân viên adidas	123123123
 \.
 
 
@@ -776,7 +788,7 @@ COPY public.transfer_requests (quantity, create_date, from_inventory_guid, guid,
 COPY public.users (is_active, id, guid, role_guid, contact_info, email, password, username) FROM stdin;
 t	1	3b31c9a7-fe42-45bc-82e2-6f2d5161abff	371192fd-85e8-417c-9655-2e24439497b9	123123123	admind@gmail.com	$2a$10$f/tpAGsoMbgj6W/6G25tl.gkpnI5jur4fgkpaUeUdittpQamxvqRS	ADMIN
 t	3	506af662-b4b8-4e63-bf5a-37a9f02946dd	3fa4881c-211a-4e1b-9669-c0713f26167f	123123123	anhtuan@gmail.com	$2a$10$G3zCHyVD9F8QDyuoR.kSteyvxvFlAHAr8A7q1Vxeny6d2TTq2Oiam	anhtuan
-t	4	5c10b89d-1588-4fa4-8900-0fe803fd8036	df0071d3-ebe4-449a-9c37-deb5d4bd6d1a	123123123	ductoan@gmail.com	$2a$10$xmTNLIaN8W3duVjszd3MGeaM.PvkBAx/yk7CfMIipTcoxhzwqbbkS	ductoan
+t	4	5c10b89d-1588-4fa4-8900-0fe803fd8036	df0071d3-ebe4-449a-9c37-deb5d4bd6d1a	123123123	ductoan@gmail.com	$2a$10$xmTNLIaN8W3duVjszd3MGeaM.PvkBAx/yk7CfMIipTcoxhzwqbbkS	ductoan1
 \.
 
 
@@ -803,14 +815,14 @@ SELECT pg_catalog.setval('public.categories_id_seq', 4, true);
 -- Name: consignments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.consignments_id_seq', 1, false);
+SELECT pg_catalog.setval('public.consignments_id_seq', 4, true);
 
 
 --
 -- Name: customers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.customers_id_seq', 1, false);
+SELECT pg_catalog.setval('public.customers_id_seq', 2, true);
 
 
 --
@@ -852,21 +864,21 @@ SELECT pg_catalog.setval('public.products_id_seq', 2, true);
 -- Name: purchase_order_details_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.purchase_order_details_id_seq', 1, false);
+SELECT pg_catalog.setval('public.purchase_order_details_id_seq', 4, true);
 
 
 --
 -- Name: purchase_orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.purchase_orders_id_seq', 1, false);
+SELECT pg_catalog.setval('public.purchase_orders_id_seq', 2, true);
 
 
 --
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.roles_id_seq', 3, true);
+SELECT pg_catalog.setval('public.roles_id_seq', 4, true);
 
 
 --
@@ -894,7 +906,7 @@ SELECT pg_catalog.setval('public.supplier_performance_id_seq', 1, false);
 -- Name: suppliers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.suppliers_id_seq', 1, false);
+SELECT pg_catalog.setval('public.suppliers_id_seq', 2, true);
 
 
 --
