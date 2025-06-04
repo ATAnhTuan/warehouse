@@ -37,6 +37,13 @@ public class PurchaseOrderController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
+    @PutMapping("/{guid}")
+    public ResponseEntity<PurchaseOrderResponseDto> update(@PathVariable UUID guid, @RequestBody PurchaseOrderRequestDto dto) {
+        PurchaseOrderResponseDto response = purchaseOrderService.update(guid, dto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
     // Lấy PurchaseOrder theo GUID
     @GetMapping("/{guid}")
     public ResponseEntity<PurchaseOrderResponseDto> findByGuid(@PathVariable UUID guid) {
