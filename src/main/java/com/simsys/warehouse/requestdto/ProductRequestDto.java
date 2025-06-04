@@ -1,5 +1,6 @@
 package com.simsys.warehouse.requestdto;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class ProductRequestDto {
@@ -7,12 +8,12 @@ public class ProductRequestDto {
     private Integer quantity;
     private String description;
     private String status;
-    private String image; // Thêm image
+    private String image;
     private UUID categoryGuid;
     private UUID variantGuid;
-    private UUID consignmentGuid; // Thêm consignmentGuid
+    private UUID consignmentGuid;
+    private BigDecimal price;
 
-    // Getters & Setters
     public String getName() {
         return name;
     }
@@ -75,5 +76,13 @@ public class ProductRequestDto {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

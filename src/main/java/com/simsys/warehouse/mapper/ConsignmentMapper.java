@@ -4,6 +4,8 @@ import com.simsys.warehouse.entity.ConsignmentEntity;
 import com.simsys.warehouse.requestdto.ConsignmentRequestDto;
 import com.simsys.warehouse.responsedto.ConsignmentResponseDto;
 
+import java.math.BigDecimal;
+
 public class ConsignmentMapper {
 
     public static ConsignmentEntity toEntity(ConsignmentRequestDto dto) {
@@ -11,7 +13,7 @@ public class ConsignmentMapper {
         entity.setSku(dto.getSku());
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
-        entity.setPrice(dto.getPrice());
+        entity.setPayPrice(dto.getPayPrice());
         entity.setQuantity(dto.getQuantity());
         entity.setSupplierGuid(dto.getSupplierGuid());
         entity.setPurchaseOrderGuid(dto.getPurchaseOrderGuid());
@@ -25,11 +27,13 @@ public class ConsignmentMapper {
         dto.setSku(entity.getSku());
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
-        dto.setPrice(entity.getPrice());
+        dto.setPayPrice(entity.getPayPrice());
         dto.setQuantity(entity.getQuantity());
         dto.setCreateDate(entity.getCreateDate());
         dto.setSupplierGuid(entity.getSupplierGuid());
         dto.setPurchaseOrderGuid(entity.getPurchaseOrderGuid());
+        dto.setTotalPrice(entity.getTotalPrice());
+
         return dto;
     }
 }

@@ -1,5 +1,6 @@
 package com.simsys.warehouse.responsedto;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class ProductResponseDto {
@@ -13,12 +14,13 @@ public class ProductResponseDto {
     private final UUID categoryGuid;
     private final UUID variantGuid;
     private final UUID consignmentGuid; // Thêm consignmentGuid
+    private final BigDecimal price; // Thêm price
     private final CategoryResponseDto category;
     private final VariantResponseDto variant;
 
     public ProductResponseDto(Long id, String name, Integer quantity, String description, String status,
                               String image, UUID guid, UUID categoryGuid, UUID variantGuid, UUID consignmentGuid,
-                              CategoryResponseDto category, VariantResponseDto variant) {
+                              BigDecimal price, CategoryResponseDto category, VariantResponseDto variant) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -29,6 +31,7 @@ public class ProductResponseDto {
         this.categoryGuid = categoryGuid;
         this.variantGuid = variantGuid;
         this.consignmentGuid = consignmentGuid;
+        this.price = price;
         this.category = category;
         this.variant = variant;
     }
@@ -73,6 +76,10 @@ public class ProductResponseDto {
 
     public UUID getConsignmentGuid() {
         return consignmentGuid;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
     }
 
     public CategoryResponseDto getCategory() {

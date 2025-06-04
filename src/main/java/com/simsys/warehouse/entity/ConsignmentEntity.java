@@ -24,16 +24,17 @@ public class ConsignmentEntity {
 
     private String description;
 
-    private BigDecimal price;
+    private BigDecimal payPrice;
 
     private Integer quantity;
+
+    private BigDecimal totalPrice;
 
     private LocalDateTime createDate = LocalDateTime.now();
 
     @Column(nullable = false)
     private UUID supplierGuid;
 
-    // Foreign key thủ công liên kết với PurchaseOrder
     @Column(nullable = false)
     private UUID purchaseOrderGuid;
 
@@ -75,12 +76,12 @@ public class ConsignmentEntity {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getPayPrice() {
+        return payPrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setPayPrice(BigDecimal payPrice) {
+        this.payPrice = payPrice;
     }
 
     public Integer getQuantity() {
@@ -89,6 +90,14 @@ public class ConsignmentEntity {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public LocalDateTime getCreateDate() {

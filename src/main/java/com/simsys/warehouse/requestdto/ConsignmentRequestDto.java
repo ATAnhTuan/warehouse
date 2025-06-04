@@ -7,16 +7,24 @@ public class ConsignmentRequestDto {
     private String sku;
     private String name;
     private String description;
-    private BigDecimal price;
+    private BigDecimal payPrice;
     private Integer quantity;
     private UUID supplierGuid;
     private UUID purchaseOrderGuid;
 
-    public ConsignmentRequestDto(String sku, String name, String description, BigDecimal price, Integer quantity, UUID supplierGuid, UUID purchaseOrderGuid) {
+    public ConsignmentRequestDto(
+            String sku,
+            String name,
+            String description,
+            BigDecimal payPrice,
+            Integer quantity,
+            UUID supplierGuid,
+            UUID purchaseOrderGuid
+    ) {
         this.sku = sku;
         this.name = name;
         this.description = description;
-        this.price = price;
+        this.payPrice = payPrice;
         this.quantity = quantity;
         this.supplierGuid = supplierGuid;
         this.purchaseOrderGuid = purchaseOrderGuid;
@@ -46,12 +54,12 @@ public class ConsignmentRequestDto {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getPayPrice() {
+        return payPrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setPayPrice(BigDecimal payPrice) {
+        this.payPrice = payPrice;
     }
 
     public Integer getQuantity() {

@@ -2,6 +2,7 @@ package com.simsys.warehouse.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -40,7 +41,6 @@ public class ProductEntity {
     @JoinColumn(name = "category_guid", referencedColumnName = "guid", insertable = false, updatable = false)
     private CategoryEntity category;
 
-
     @Column(name = "consignment_guid")
     private UUID consignmentGuid;
 
@@ -48,6 +48,8 @@ public class ProductEntity {
     @JoinColumn(name = "consignment_guid", referencedColumnName = "guid", insertable = false, updatable = false)
     private ConsignmentEntity consignment;
 
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
 
     public ProductEntity() {
     }
@@ -55,7 +57,7 @@ public class ProductEntity {
     public ProductEntity(String name, Integer quantity, String description, String status, UUID guid,
                          UUID categoryGuid, UUID variantGuid, UUID consignmentGuid,
                          VariantEntity variant, CategoryEntity category, ConsignmentEntity consignment,
-                         String image) {
+                         String image, BigDecimal price) {
         this.name = name;
         this.quantity = quantity;
         this.description = description;
@@ -68,34 +70,15 @@ public class ProductEntity {
         this.category = category;
         this.consignment = consignment;
         this.image = image;
+        this.price = price;
     }
 
-
-
-
-// Getters and Setters
-public String getImage() {
-    return image;
-}
-
-    public void setImage(String image) {
-        this.image = image;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public UUID getConsignmentGuid() {
-        return consignmentGuid;
-    }
-
-    public void setConsignmentGuid(UUID consignmentGuid) {
-        this.consignmentGuid = consignmentGuid;
-    }
-
-    public ConsignmentEntity getConsignment() {
-        return consignment;
-    }
-
-    public void setConsignment(ConsignmentEntity consignment) {
-        this.consignment = consignment;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public Long getId() {
@@ -138,6 +121,14 @@ public String getImage() {
         this.status = status;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public UUID getGuid() {
         return guid;
     }
@@ -176,5 +167,21 @@ public String getImage() {
 
     public void setCategory(CategoryEntity category) {
         this.category = category;
+    }
+
+    public UUID getConsignmentGuid() {
+        return consignmentGuid;
+    }
+
+    public void setConsignmentGuid(UUID consignmentGuid) {
+        this.consignmentGuid = consignmentGuid;
+    }
+
+    public ConsignmentEntity getConsignment() {
+        return consignment;
+    }
+
+    public void setConsignment(ConsignmentEntity consignment) {
+        this.consignment = consignment;
     }
 }

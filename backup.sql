@@ -63,7 +63,9 @@ CREATE TABLE public.consignments (
     supplier_guid uuid NOT NULL,
     description character varying(255),
     name character varying(255) NOT NULL,
-    sku character varying(255) NOT NULL
+    sku character varying(255) NOT NULL,
+    pay_price numeric(38,2),
+    total_price numeric(38,2)
 );
 
 
@@ -247,7 +249,8 @@ CREATE TABLE public.products (
     description character varying(255),
     image character varying(255),
     name character varying(255),
-    status character varying(255)
+    status character varying(255),
+    price numeric(38,2)
 );
 
 
@@ -632,8 +635,8 @@ COPY public.categories (id, guid, description, name) FROM stdin;
 -- Data for Name: consignments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.consignments (price, quantity, create_date, id, guid, purchase_order_guid, supplier_guid, description, name, sku) FROM stdin;
-10.00	10	2025-06-03 22:56:26.913521	3	15a8b639-9f65-4273-a435-ceaba0203151	de8238e4-8af4-458d-8ee5-75824f0338fe	b16e390e-23e2-447c-a94c-c472c253c847	hang hoa	hang hoa	test
+COPY public.consignments (price, quantity, create_date, id, guid, purchase_order_guid, supplier_guid, description, name, sku, pay_price, total_price) FROM stdin;
+10.00	10	2025-06-03 22:56:26.913521	3	15a8b639-9f65-4273-a435-ceaba0203151	de8238e4-8af4-458d-8ee5-75824f0338fe	b16e390e-23e2-447c-a94c-c472c253c847	hang hoa	hang hoa	test	\N	\N
 \.
 
 
@@ -683,9 +686,9 @@ COPY public.orders (total_price, id, customer_guid, guid, transaction_guid, desc
 -- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.products (quantity, id, category_guid, consignment_guid, guid, variant_guid, description, image, name, status) FROM stdin;
-0	1	6ace6271-4b0a-40d4-90ad-98129b233b3a	\N	a6386522-d30e-4167-a4b3-ccec258cc5f7	d59a941d-69be-48e4-8097-3108303c85e9	quần dài	string	Quần dài	active
-0	2	79479b47-441d-454d-950e-6b56006de515	\N	7f28e602-6afa-4428-913f-488560f75fb3	05ee6231-45f8-4202-8d86-f2d3b23183c0	Áo	string	Áo	active
+COPY public.products (quantity, id, category_guid, consignment_guid, guid, variant_guid, description, image, name, status, price) FROM stdin;
+0	1	6ace6271-4b0a-40d4-90ad-98129b233b3a	\N	a6386522-d30e-4167-a4b3-ccec258cc5f7	d59a941d-69be-48e4-8097-3108303c85e9	quần dài	string	Quần dài	active	\N
+0	2	79479b47-441d-454d-950e-6b56006de515	\N	7f28e602-6afa-4428-913f-488560f75fb3	05ee6231-45f8-4202-8d86-f2d3b23183c0	Áo	string	Áo	active	\N
 \.
 
 

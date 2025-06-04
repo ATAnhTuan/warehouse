@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class ProductMapper {
 
-    // Nếu bạn có thêm image trong request, nhớ thêm getter image vào ProductRequestDto
     public static ProductEntity toEntity(ProductRequestDto dto) {
         ProductEntity entity = new ProductEntity();
         entity.setName(dto.getName());
@@ -20,7 +19,9 @@ public class ProductMapper {
         entity.setStatus(dto.getStatus());
         entity.setCategoryGuid(dto.getCategoryGuid());
         entity.setVariantGuid(dto.getVariantGuid());
-         entity.setImage(dto.getImage());
+        entity.setConsignmentGuid(dto.getConsignmentGuid());
+        entity.setImage(dto.getImage());
+         entity.setPrice(dto.getPrice());
         return entity;
     }
 
@@ -41,11 +42,12 @@ public class ProductMapper {
                 entity.getQuantity(),
                 entity.getDescription(),
                 entity.getStatus(),
-                entity.getImage(),           // Thêm trường image
+                entity.getImage(),
                 entity.getGuid(),
                 entity.getCategoryGuid(),
                 entity.getVariantGuid(),
-                entity.getConsignmentGuid(), // Thêm consignmentGuid
+                entity.getConsignmentGuid(),
+                entity.getPrice(),            // Thêm price vào constructor
                 categoryResponseDto,
                 variantResponseDto
         );
